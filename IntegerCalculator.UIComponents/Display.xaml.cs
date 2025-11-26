@@ -9,8 +9,7 @@ namespace IntegerCalculator.UIComponents
 	/// </summary>
 	public partial class Display : UserControl
 	{
-		private static readonly char[] AllowedChars =
-	   "0123456789+-*/".ToCharArray();
+		private static readonly char[] AllowedChars = "0123456789+-*/".ToCharArray();
 
 		public Display()
 		{
@@ -24,7 +23,10 @@ namespace IntegerCalculator.UIComponents
 		}
 
 		public static readonly DependencyProperty ValueProperty =
-			DependencyProperty.Register(nameof(Value), typeof(string), typeof(Display));
+			DependencyProperty.Register(nameof(Value), 
+				typeof(string),
+				typeof(Display), 
+			new PropertyMetadata(string.Empty, OnValueChanged));
 
 		private void DisplayText_PreviewTextInput(object sender, TextCompositionEventArgs e)
 		{
@@ -33,6 +35,7 @@ namespace IntegerCalculator.UIComponents
 			{
 				e.Handled = true; // nepovolit vstup
 			}
+
 		}
 
 		private void DisplayText_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -48,6 +51,27 @@ namespace IntegerCalculator.UIComponents
 			if (e.Key == Key.Space)
 			{
 				e.Handled = true;
+			}
+		}
+
+
+		private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			if (d is Display display && display.DisplayText != null)
+			{
+				display.DisplayText.Dispatcher.BeginInvoke(
+					() =>
+					{
+						var tb = display.DisplayText;
+
+						// Nastaví caret na konec
+						tb.CaretIndex = tb.Text.Length;
+
+						// ScrollToEnd pro horizontální scroll
+						tb.ScrollToHorizontalOffset(double.MaxValue);
+					},
+					System.Windows.Threading.DispatcherPriority.Loaded // důležité!
+				);
 			}
 		}
 	}

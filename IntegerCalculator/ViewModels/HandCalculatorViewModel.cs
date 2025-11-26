@@ -6,6 +6,8 @@ namespace IntegerCalculator.ViewModels
 	[ObservableObject]
 	public partial class HandCalculatorViewModel
 	{
+		private static readonly char[] AllowedChars = "0123456789+-*/".ToCharArray();
+
 		[ObservableProperty]
 		public string _formula;
 
@@ -20,7 +22,11 @@ namespace IntegerCalculator.ViewModels
 		{
 			if (parameter is string character)
 			{
-				Formula += character;
+				var isAllowed = AllowedChars.Contains(character.First());
+				if (isAllowed)
+				{
+					Formula += character;
+				}
 			}
 		}
 	}
