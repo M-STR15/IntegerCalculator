@@ -1,15 +1,15 @@
 ﻿using IntegerCalculator.BE.EventLog.Services;
-using Microsoft.Extensions.DependencyInjection;
+using Ninject;
 
 namespace IntegerCalculator.BE.EventLog.Infrastructure
 {
 	public static class CollectionExtensionService
 	{
-		public static IServiceCollection AddIntegerCalculatorBEEventLog(this IServiceCollection services)
+		public static IKernel AddIntegerCalculatorBEEventLog(this IKernel kernel)
 		{
-			services.AddSingleton<IEventLogService, EventLogService>();
+			kernel.Bind<IEventLogService>().To<EventLogService>().InSingletonScope();
 
-			return services;
+			return kernel;
 		}
 	}
 }

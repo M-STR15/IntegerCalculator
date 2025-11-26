@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ninject" Version="3.3.6" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\IntegerCalculator.BE.EventLog\IntegerCalculator.BE.EventLog.csproj" />
   </ItemGroup>
 

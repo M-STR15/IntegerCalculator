@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntegerCalculator.BE.ExpressionEvaluator
 {
-	internal class CalculatSErvice
+	internal class CalculatService
 	{
 	}
 }

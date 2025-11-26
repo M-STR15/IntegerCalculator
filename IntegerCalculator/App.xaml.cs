@@ -2,6 +2,9 @@
 using Ninject;
 using System.Windows;
 using System.Windows.Input;
+using IntegerCalculator.BE.ExpressionEvaluator.Infrastructure;
+using IntegerCalculator.BE.EventLog.Infrastructure;
+using IntegerCalculator.Infrastructure;
 
 namespace IntegerCalculator
 {
@@ -33,18 +36,10 @@ namespace IntegerCalculator
 		{
 			_container = new StandardKernel();
 
-			configWindows();
-			configVieModels();
-		}
 
-		private void configWindows()
-		{
-			_container.Bind<MainWindow>().To<MainWindow>().InSingletonScope();
-		}
-
-		private void configVieModels()
-		{
-			_container.Bind<MainViewModel>().To<MainViewModel>().InSingletonScope();
+			_container.AddIntegerCalculatorBEExpressionEvaluatorInfrastructure();
+			_container.AddIntegerCalculatorBEEventLog();
+			_container.AddIntegerCalculatorInfrastructure();
 		}
 
 		private void app_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
