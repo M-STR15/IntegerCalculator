@@ -91,6 +91,6 @@
             Foreground="#66FF66"
             ItemContainerStyle="{StaticResource HistoryItemStyle}"
             ScrollViewer.VerticalScrollBarVisibility="Auto" />
-        <uc:Keyboard Grid.Row="4" ClickCharacterCommand="{Binding InsertCharacter}" />
+        <uc:Keyboard Grid.Row="4" ClickCharacterCommand="{Binding InsertCharacterCommand}" ClickEqualsCommand="{Binding EqualsCommand}" />
     </Grid>
 </UserControl>

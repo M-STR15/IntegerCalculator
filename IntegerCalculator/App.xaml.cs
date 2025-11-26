@@ -13,7 +13,7 @@ namespace IntegerCalculator
 	/// </summary>
 	public partial class App : Application
 	{
-		private IKernel _container;
+		public IKernel Kernel { get; private set; }
 		private IEventLogService _log;
 
 		[STAThread]
@@ -27,19 +27,19 @@ namespace IntegerCalculator
 
 			configureContainer();
 
-			Current.MainWindow = _container.Get<MainWindow>();
-			Current.MainWindow.DataContext = _container.Get<MainViewModel>();
+			Current.MainWindow = Kernel.Get<MainWindow>();
+			Current.MainWindow.DataContext = Kernel.Get<MainViewModel>();
 			Current.MainWindow.Show();
 		}
 
 		private void configureContainer()
 		{
-			_container = new StandardKernel();
+			Kernel = new StandardKernel();
 
 
-			_container.AddIntegerCalculatorBEExpressionEvaluatorInfrastructure();
-			_container.AddIntegerCalculatorBEEventLog();
-			_container.AddIntegerCalculatorInfrastructure();
+			Kernel.AddIntegerCalculatorBEExpressionEvaluatorInfrastructure();
+			Kernel.AddIntegerCalculatorBEEventLog();
+			Kernel.AddIntegerCalculatorInfrastructure();
 		}
 
 		private void app_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

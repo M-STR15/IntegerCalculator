@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using IntegerCalculator.BE.ExpressionEvaluator;
 using System.Windows.Input;
 
 namespace IntegerCalculator.ViewModels
@@ -11,11 +12,16 @@ namespace IntegerCalculator.ViewModels
 		[ObservableProperty]
 		public string _formula;
 
-		public ICommand InsertCharacter { get; private set; }
+		public ICommand InsertCharacterCommand { get; private set; }
+		public ICommand EqualsCommand { get; private set; }
+		private CalculatService _calculatService;
 
-		public HandCalculatorViewModel()
+		public HandCalculatorViewModel(CalculatService calculatService)
 		{
-			InsertCharacter = new Helpers.RelayCommand(onInsertCharacter_Execute);
+			_calculatService = calculatService;
+
+			InsertCharacterCommand = new Helpers.RelayCommand(onInsertCharacter_Execute);
+			EqualsCommand = new Helpers.RelayCommand(onEqualsCommand_Execute);
 		}
 
 		private void onInsertCharacter_Execute(object parameter)
@@ -28,6 +34,13 @@ namespace IntegerCalculator.ViewModels
 					Formula += character;
 				}
 			}
+		}
+
+		private void onEqualsCommand_Execute(object parameter)
+		{
+			_calculatService.EvaluateExpression(" 3 * 3 ");
+
+			_calculatService.EvaluateExpression(" 33 * 3 ");
 		}
 	}
 }

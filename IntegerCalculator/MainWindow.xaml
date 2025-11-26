@@ -12,6 +12,6 @@
     mc:Ignorable="d">
 
     <Grid>
-        <views:HandCalculator />
+        <views:HandCalculator DataContext="{Binding HandCalculatorViewModel}" />
     </Grid>
 </Window>

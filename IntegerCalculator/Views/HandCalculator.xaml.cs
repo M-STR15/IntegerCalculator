@@ -11,7 +11,6 @@ namespace IntegerCalculator.Views
 		public HandCalculator()
 		{
 			InitializeComponent();
-			DataContext = new HandCalculatorViewModel();
 		}
 	}
 }
