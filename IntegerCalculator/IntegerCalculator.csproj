@@ -9,9 +9,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Icons\SVG\close-square.svg" />
+    <None Remove="Resources\Icons\SVG\square-arrow.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Ninject" Version="3.3.6" />
+    <PackageReference Include="SharpVectors" Version="1.8.5" />
+    <PackageReference Include="SharpVectors.Wpf" Version="1.8.5" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\IntegerCalculator.BE.EventLog\IntegerCalculator.BE.EventLog.csproj" />
     <ProjectReference Include="..\IntegerCalculator.BE.ExpressionEvaluator\IntegerCalculator.BE.ExpressionEvaluator.csproj" />
     <ProjectReference Include="..\IntegerCalculator.UIComponents\IntegerCalculator.UIComponents.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Icons\SVG\close-square.svg" />
+    <Resource Include="Resources\Icons\SVG\square-arrow.svg" />
   </ItemGroup>
 
 </Project>
