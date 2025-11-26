@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\IntegerCalculator.BE.EventLog\IntegerCalculator.BE.EventLog.csproj" />
     <ProjectReference Include="..\IntegerCalculator.BE.ExpressionEvaluator\IntegerCalculator.BE.ExpressionEvaluator.csproj" />
+    <ProjectReference Include="..\IntegerCalculator.UIComponents\IntegerCalculator.UIComponents.csproj" />
   </ItemGroup>
 
 </Project>

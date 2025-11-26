@@ -3,10 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:uc="clr-namespace:IntegerCalculator.UIComponents;assembly=IntegerCalculator.UIComponents"
         xmlns:local="clr-namespace:IntegerCalculator"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
 
+        <Label Content="Formula:" Grid.Row="0"/>
+        <uc:Display/>
+        <Label Content="Procedure calculat:" Grid.Row="2"/>
     </Grid>
 </Window>
