@@ -46,7 +46,7 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 
 			foreach (var opChar in _operators)
 			{
-				calculationOperator(ref expression, opChar);
+				calculationOperator(ref expression, opChar, true);
 			}
 
 			CalculationSteps.Add($"Výsledek: '{expression}'");
@@ -60,7 +60,7 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 		}
 
 
-		private void calculationOperator(ref string expression, char opChar)
+		private void calculationOperator(ref string expression, char opChar, bool withHistory = false)
 		{
 			var isCompleteCalculation = false;
 			try
@@ -78,8 +78,9 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 						   expression.Substring(0, lengBeforeOperation)         // před úsekem
 						   + operation.Value                                    // nový text
 						   + expression.Substring(firstIndexAfterOperation);    // za úsekem
+
 						isCompleteCalculation = isCalculationComplete(expression, opChar);
-						if (isExistNextOperation(expression))
+						if (isExistNextOperation(expression) && withHistory)
 						{
 							_stepNumber++;
 							CalculationSteps.Add($"{_stepNumber} krokW výpočtu: '{expression}'");
@@ -102,9 +103,12 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 
 		private bool isCalculationComplete(string expression, char opChar)
 		{
-			var isBigInteger = BigInteger.TryParse(expression, out _);
-			var isNotOperatorInExpession = !expression.Contains(opChar);
-			return isBigInteger || isNotOperatorInExpession;
+			var isResult = BigInteger.TryParse(expression, out _);
+			var isOperatorInExpession = expression.Contains(opChar);
+
+			var isContinueCaltulationActulOperator = !isResult && isOperatorInExpession;
+
+			return isResult || isContinueCaltulationActulOperator;
 		}
 
 		private static Operation? findOperations(string expression, char opChar)
