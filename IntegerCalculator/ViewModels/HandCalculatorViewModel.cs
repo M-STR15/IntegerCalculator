@@ -39,6 +39,7 @@ namespace IntegerCalculator.ViewModels
 		private void onEqualsCommand_Execute(object parameter)
 		{
 			_calculatService.EvaluateExpression(" 3 * 3 ");
+			_calculatService.EvaluateExpression(" 3 * 3 + 4");
 
 			_calculatService.EvaluateExpression(" 33 * 3 ");
 		}
