@@ -6,12 +6,15 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 {
 	public class CalculatService
 	{
-		public List<string> Procedures { get; set; } = new();
+		public List<string> CalculationSteps { get; set; } = new();
 		public IEventLogService EventLog { get; }
+		private int _stepNumber = 0;
+
+		private ICollection<char> _operators = new List<char> { '*', '/', '+', '-' };
 
 		public CalculatService(IEventLogService eventLog)
 		{
-			Procedures = new List<string>();
+			CalculationSteps.Clear();
 			EventLog = eventLog;
 		}
 		/// <summary>
@@ -34,16 +37,26 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 		/// Jakákoli neošetřená výjimka během výpočtu je zachycena a zalogována; metoda však výjimku
 		/// znovu nevyhazuje.
 		/// </exception>
-		public string EvaluateExpression(string expression)
+		public ExpressionResult EvaluateExpression(string expression)
 		{
 			expression = expression.Trim();
-			calculationOperator(ref expression, '*');
-			calculationOperator(ref expression, '/');
-			calculationOperator(ref expression, '+');
-			calculationOperator(ref expression, '-');
+			_stepNumber = default;
+			CalculationSteps = new();
+			CalculationSteps.Add($"Vstupní výraz: '{expression}'");
 
-			var result= expression;
-			return result;
+			foreach (var opChar in _operators)
+			{
+				calculationOperator(ref expression, opChar);
+			}
+
+			CalculationSteps.Add($"Výsledek: '{expression}'");
+			var expressionResult = new ExpressionResult
+			{
+				Result = expression,
+				CalculationSteps = CalculationSteps
+			};
+
+			return expressionResult;
 		}
 
 
@@ -62,11 +75,15 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 						var firstIndexAfterOperation = operation.EndOriginalIndex + 1;
 
 						expression =
-						   expression.Substring(0, lengBeforeOperation)    // před úsekem
-						   + operation.Value                                        // nový text
-						   + expression.Substring(firstIndexAfterOperation);  // za úsekem
-
+						   expression.Substring(0, lengBeforeOperation)         // před úsekem
+						   + operation.Value                                    // nový text
+						   + expression.Substring(firstIndexAfterOperation);    // za úsekem
 						isCompleteCalculation = isCalculationComplete(expression, opChar);
+						if (isExistNextOperation(expression))
+						{
+							_stepNumber++;
+							CalculationSteps.Add($"{_stepNumber} krokW výpočtu: '{expression}'");
+						}
 					}
 					else
 					{
@@ -80,6 +97,8 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 				EventLog.LogError(Guid.Parse("ed931086-e49f-460a-b6d8-23584a3c7dd5"), ex, message);
 			}
 		}
+
+		private bool isExistNextOperation(string expression) => _operators.Any(z => expression.Contains(z));
 
 		private bool isCalculationComplete(string expression, char opChar)
 		{
