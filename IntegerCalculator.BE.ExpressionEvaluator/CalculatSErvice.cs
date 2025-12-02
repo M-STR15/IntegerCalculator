@@ -71,10 +71,10 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 
 					if (operation != null)
 					{
-						var lengBeforeOperation = operation.StartOriginalIndex;
+						var lenghtBeforeOperation = operation.StartOriginalIndex;
 						var firstIndexAfterOperation = operation.EndOriginalIndex;
 
-						var textBefore = expression.Substring(0, lengBeforeOperation);
+						var textBefore = expression.Substring(0, lenghtBeforeOperation);
 						var textAfter = expression.Substring(firstIndexAfterOperation);
 
 						expression =
@@ -117,31 +117,29 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 
 		private static Operation? findOperations(string expression, char opChar)
 		{
-			string cleaned = expression.Replace(" ", ""); // odstraníme mezery pro hledání operandů
-
-			for (int i = 0; i < cleaned.Length; i++)
+			for (int i = 0; i < expression.Length; i++)
 			{
-				if (cleaned[i] == opChar)
+				if (expression[i] == opChar)
 				{
 					// levý operand
 					int leftStart = i - 1;
-					while (leftStart >= 0 && (char.IsDigit(cleaned[leftStart]) || cleaned[leftStart] == '.'))
+					while (leftStart >= 0 && (char.IsDigit(expression[leftStart])))
 						leftStart--;
 
-					string leftStr = cleaned.Substring(leftStart + 1, i - leftStart - 1);
+					string leftStr = expression.Substring(leftStart + 1, i - leftStart - 1);
 
 					// pravý operand
 					int rightEnd = i + 1;
-					while (rightEnd < cleaned.Length && (char.IsDigit(cleaned[rightEnd]) || cleaned[rightEnd] == '.'))
+					while (rightEnd < expression.Length && (char.IsDigit(expression[rightEnd])))
 						rightEnd++;
 
-					string rightStr = cleaned.Substring(i + 1, rightEnd - i - 1);
+					string rightStr = expression.Substring(i + 1, rightEnd - i - 1);
 
 					// uložíme oblast podle indexů v původním stringu (s mezerami)
 					int startOriginalIndex = leftStart + 1;
-					int endOriginalIndex = rightEnd + rightStr.Length - 1;
-					var lengCalculationPart = endOriginalIndex - startOriginalIndex;
-					var calculationPart = expression.Substring(startOriginalIndex, lengCalculationPart);
+					int endOriginalIndex = rightEnd;
+					var lenghtCalculationPart = endOriginalIndex - startOriginalIndex;
+					var calculationPart = expression.Substring(startOriginalIndex, lenghtCalculationPart);
 					return new Operation(double.Parse(leftStr), double.Parse(rightStr), startOriginalIndex, endOriginalIndex, opChar, calculationPart);
 				}
 			}
