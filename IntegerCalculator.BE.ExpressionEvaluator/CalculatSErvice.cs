@@ -39,7 +39,7 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 		/// </exception>
 		public ExpressionResult EvaluateExpression(string expression)
 		{
-			expression = expression.Trim();
+			expression = expression.Replace(" ", "");
 			_stepNumber = default;
 			CalculationSteps = new();
 			CalculationSteps.Add($"Vstupní výraz: '{expression}'");
@@ -72,18 +72,22 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 					if (operation != null)
 					{
 						var lengBeforeOperation = operation.StartOriginalIndex;
-						var firstIndexAfterOperation = operation.EndOriginalIndex + 1;
+						var firstIndexAfterOperation = operation.EndOriginalIndex;
+
+						var textBefore = expression.Substring(0, lengBeforeOperation);
+						var textAfter = expression.Substring(firstIndexAfterOperation);
 
 						expression =
-						   expression.Substring(0, lengBeforeOperation)         // před úsekem
-						   + operation.Value                                    // nový text
-						   + expression.Substring(firstIndexAfterOperation);    // za úsekem
+						  textBefore			// před úsekem
+						   + operation.Value	// nový text
+						   + textAfter;			// za úsekem
 
 						isCompleteCalculation = isCalculationComplete(expression, opChar);
-						if (isExistNextOperation(expression) && withHistory)
+						var isExistNextOperation = existNextOperation(expression);
+						if (isExistNextOperation && withHistory)
 						{
 							_stepNumber++;
-							CalculationSteps.Add($"{_stepNumber} krokW výpočtu: '{expression}'");
+							CalculationSteps.Add($"{_stepNumber} krok výpočtu: '{expression}'");
 						}
 					}
 					else
@@ -99,7 +103,7 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 			}
 		}
 
-		private bool isExistNextOperation(string expression) => _operators.Any(z => expression.Contains(z));
+		private bool existNextOperation(string expression) => _operators.Any(z => expression.Contains(z));
 
 		private bool isCalculationComplete(string expression, char opChar)
 		{
@@ -108,7 +112,7 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 
 			var isContinueCaltulationActulOperator = !isResult && isOperatorInExpession;
 
-			return isResult || isContinueCaltulationActulOperator;
+			return isResult || !isContinueCaltulationActulOperator;
 		}
 
 		private static Operation? findOperations(string expression, char opChar)
@@ -134,8 +138,8 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 					string rightStr = cleaned.Substring(i + 1, rightEnd - i - 1);
 
 					// uložíme oblast podle indexů v původním stringu (s mezerami)
-					int startOriginalIndex = expression.IndexOf(leftStr, StringComparison.Ordinal);
-					int endOriginalIndex = expression.LastIndexOf(rightStr, StringComparison.Ordinal) + rightStr.Length - 1;
+					int startOriginalIndex = leftStart + 1;
+					int endOriginalIndex = rightEnd + rightStr.Length - 1;
 					var lengCalculationPart = endOriginalIndex - startOriginalIndex;
 					var calculationPart = expression.Substring(startOriginalIndex, lengCalculationPart);
 					return new Operation(double.Parse(leftStr), double.Parse(rightStr), startOriginalIndex, endOriginalIndex, opChar, calculationPart);

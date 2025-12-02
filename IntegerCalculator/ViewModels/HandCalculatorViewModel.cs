@@ -44,7 +44,7 @@ namespace IntegerCalculator.ViewModels
 
 			////var expressionResult = _calculatService.EvaluateExpression(" 33 * 3 ");
 			////expressionResult = _calculatService.EvaluateExpression(" 3 * 3 + 4");
-			var expressionResult = _calculatService.EvaluateExpression(" 3 * 3 + 4 + 4");
+			var expressionResult = _calculatService.EvaluateExpression(" 3 * 3 + 4 + 4+5/5");
 			ValueDisplay = expressionResult.Result;
 			CalculationSteps.Clear();
 			foreach (var item in expressionResult.CalculationSteps)
