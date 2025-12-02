@@ -39,6 +39,7 @@ namespace IntegerCalculator.Tests.BE.ExpressionsEvaluatorTest
 		[InlineData("2-5/5", "1")]
 		[InlineData("5-5", "0")]
 		[InlineData("5-15", "-10")]
+		[InlineData("1+1+2+3-4/4*2","5")]
 		public void EvaluateExpression_OperatorPrecedence(string formula, string resultTest)
 		{
 			var log = new FakeEventLogService();

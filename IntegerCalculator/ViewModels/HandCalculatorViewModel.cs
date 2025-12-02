@@ -40,12 +40,7 @@ namespace IntegerCalculator.ViewModels
 
 		private void onEqualsCommand_Execute(object parameter)
 		{
-			////_calculatService.EvaluateExpression(" 3 * 3 ");
-
-			////var expressionResult = _calculatService.EvaluateExpression(" 33 * 3 ");
-			////expressionResult = _calculatService.EvaluateExpression(" 3 * 3 + 4");
-			var expressionResult = _calculatService.EvaluateExpression(" 3 * 3 + 4 + 4+5/5");
-			ValueDisplay = expressionResult.Result;
+			var expressionResult = _calculatService.EvaluateExpression(ValueDisplay);
 			CalculationSteps.Clear();
 			foreach (var item in expressionResult.CalculationSteps)
 			{

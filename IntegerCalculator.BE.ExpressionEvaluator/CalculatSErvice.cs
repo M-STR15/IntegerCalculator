@@ -10,7 +10,7 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 		public IEventLogService EventLog { get; }
 		private int _stepNumber = 0;
 
-		private ICollection<char> _operators = new List<char> { '*', '/', '+', '-' };
+		private ICollection<char> _operators = new List<char> { '/', '*', '+', '-' };
 
 		public CalculatService(IEventLogService eventLog)
 		{
@@ -78,9 +78,9 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 						var textAfter = expression.Substring(firstIndexAfterOperation);
 
 						expression =
-						  textBefore			// před úsekem
-						   + operation.Value	// nový text
-						   + textAfter;			// za úsekem
+						  textBefore            // před úsekem
+						   + operation.Value    // nový text
+						   + textAfter;         // za úsekem
 
 						isCompleteCalculation = isCalculationComplete(expression, opChar);
 						var isExistNextOperation = existNextOperation(expression);
