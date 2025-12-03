@@ -12,6 +12,19 @@
     mc:Ignorable="d">
 
     <Grid>
-        <views:HandCalculator DataContext="{Binding HandCalculatorViewModel}" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100*" />
+            <ColumnDefinition Width="113*" />
+        </Grid.ColumnDefinitions>
+        <TabControl Grid.ColumnSpan="2" Margin="10,10,10,10" Background="Transparent">
+
+            <TabItem Header="Calculator">
+                <views:HandCalculator DataContext="{Binding HandCalculatorViewModel}" />
+            </TabItem>
+            <TabItem Header="File caltulator" >
+                <views:FormulaCalculator />
+            </TabItem>
+
+        </TabControl>
     </Grid>
 </Window>
