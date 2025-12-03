@@ -121,30 +121,55 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 			{
 				if (expression[i] == opChar)
 				{
+					// rozlišit +/- (znaménko vs operátor)
+					if ((opChar == '+' || opChar == '-') && !IsOperator(expression, i))
+						continue;
+
 					// levý operand
 					int leftStart = i - 1;
-					while (leftStart >= 0 && (char.IsDigit(expression[leftStart])))
+					while (leftStart >= 0 && char.IsDigit(expression[leftStart]))
 						leftStart--;
 
 					string leftStr = expression.Substring(leftStart + 1, i - leftStart - 1);
 
 					// pravý operand
 					int rightEnd = i + 1;
-					while (rightEnd < expression.Length && (char.IsDigit(expression[rightEnd])))
+
+					// pokud je první znak + nebo - a je součástí čísla
+					if (rightEnd < expression.Length && (expression[rightEnd] == '+' || expression[rightEnd] == '-'))
+						rightEnd++;
+
+					while (rightEnd < expression.Length && char.IsDigit(expression[rightEnd]))
 						rightEnd++;
 
 					string rightStr = expression.Substring(i + 1, rightEnd - i - 1);
 
-					// uložíme oblast podle indexů v původním stringu (s mezerami)
 					int startOriginalIndex = leftStart + 1;
 					int endOriginalIndex = rightEnd;
-					var lenghtCalculationPart = endOriginalIndex - startOriginalIndex;
-					var calculationPart = expression.Substring(startOriginalIndex, lenghtCalculationPart);
-					return new Operation(double.Parse(leftStr), double.Parse(rightStr), startOriginalIndex, endOriginalIndex, opChar, calculationPart);
+					var length = endOriginalIndex - startOriginalIndex;
+					var part = expression.Substring(startOriginalIndex, length);
+
+					return new Operation(
+						double.Parse(leftStr),
+						double.Parse(rightStr),
+						startOriginalIndex,
+						endOriginalIndex,
+						opChar,
+						part
+					);
 				}
 			}
 
 			return null;
+		}
+
+		private static bool IsOperator(string expr, int index)
+		{
+			if (index == 0)
+				return false;
+
+			char left = expr[index - 1];
+			return char.IsDigit(left) || left == ')';
 		}
 	}
 }
