@@ -41,7 +41,7 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 						hasOperator = false;
 						for (int i = 0; i < expression.Length; i++)
 						{
-							if (ops.Contains(expression[i]) && IsBinaryOperator(expression, i))
+							if (ops.Contains(expression[i]) && isBinaryOperator(expression, i))
 							{
 								var operation = findOperations(expression, expression[i]);
 								if (operation != null)
@@ -84,7 +84,7 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 			};
 		}
 
-		private static bool IsBinaryOperator(string expr, int index)
+		private static bool isBinaryOperator(string expr, int index)
 		{
 			if (index == 0)
 				return false;
@@ -100,7 +100,7 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 				if (expr[i] != opChar)
 					continue;
 
-				if ((opChar == '+' || opChar == '-') && !IsBinaryOperator(expr, i))
+				if ((opChar == '+' || opChar == '-') && !isBinaryOperator(expr, i))
 					continue;
 
 				int rStart = i + 1;
@@ -108,7 +108,7 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 					continue;
 
 				int r = rStart;
-				if (r < expr.Length && (expr[r] == '+' || expr[r] == '-') && !IsBinaryOperator(expr, r))
+				if (r < expr.Length && (expr[r] == '+' || expr[r] == '-') && !isBinaryOperator(expr, r))
 					r++;
 
 				while (r < expr.Length && (char.IsDigit(expr[r]) || expr[r] == '.'))
@@ -124,7 +124,7 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 				while (l >= 0 && (char.IsDigit(expr[l]) || expr[l] == '.'))
 					l--;
 
-				if (l >= 0 && (expr[l] == '+' || expr[l] == '-') && !IsBinaryOperator(expr, l))
+				if (l >= 0 && (expr[l] == '+' || expr[l] == '-') && !isBinaryOperator(expr, l))
 					l--;
 
 				int lStart = l + 1;
