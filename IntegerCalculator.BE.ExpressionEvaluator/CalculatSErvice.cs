@@ -6,16 +6,6 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 {
 	public class CalculatService
 	{
-		public List<string> CalculationSteps { get; set; } = new();
-		public IEventLogService EventLog { get; }
-		private int _stepNumber = 0;
-
-		private IList<char> _allowedCharacters = new List<char>
-		{
-			'0','1','2','3','4','5','6','7','8','9',
-			'+','-','*','/'
-		};
-
 		// Operátory rozdělené podle precedence
 		private readonly List<List<char>> _operatorsPrecedence = new()
 	{
@@ -23,22 +13,19 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
         new List<char> { '+', '-' }  // nižší priorita
     };
 
+		private IList<char> _allowedCharacters = new List<char>
+		{
+			'0','1','2','3','4','5','6','7','8','9',
+			'+','-','*','/'
+		};
+
+		private int _stepNumber = 0;
+		public List<string> CalculationSteps { get; set; } = new();
+		private IEventLogService _eventLog;
 		public CalculatService(IEventLogService eventLog)
 		{
 			CalculationSteps.Clear();
-			EventLog = eventLog;
-		}
-
-		private (bool IsValid, char? InvalidChar) checkAllowedCharacters(string expression)
-		{
-			for (int i = 0; i < expression.Length; i++)
-			{
-				if (!_allowedCharacters.Contains(expression[i]))
-				{
-					return (false, expression[i]); // první nepovolený znak a jeho index
-				}
-			}
-			return (true, null); // všechny znaky OK
+			_eventLog = eventLog;
 		}
 
 		public ExpressionResult? EvaluateExpression(string expression)
@@ -105,27 +92,9 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 			}
 			catch (Exception ex)
 			{
-				EventLog.LogError(Guid.NewGuid(), ex, $"Chyba při výpočtu výrazu '{expression}': {ex.Message}");
+				_eventLog.LogError(Guid.NewGuid(), ex, $"Chyba při výpočtu výrazu '{expression}': {ex.Message}");
 				return default;
 			}
-		}
-
-		private void checkDotAndRound(ref string expr)
-		{
-			int dotIndex = expr.IndexOf('.');
-			if (dotIndex >= 0)
-			{
-				expr = expr.Substring(0, dotIndex); // vezme jen část před tečkou
-			}
-		}
-
-		private static bool isBinaryOperator(string expr, int index)
-		{
-			if (index == 0)
-				return false;
-
-			char left = expr[index - 1];
-			return char.IsDigit(left) || left == ')' || left == '.';
 		}
 
 		private static Operation? findOperations(string expr, char opChar)
@@ -174,6 +143,35 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 			}
 
 			return null;
+		}
+
+		private static bool isBinaryOperator(string expr, int index)
+		{
+			if (index == 0)
+				return false;
+
+			char left = expr[index - 1];
+			return char.IsDigit(left) || left == ')' || left == '.';
+		}
+
+		private (bool IsValid, char? InvalidChar) checkAllowedCharacters(string expression)
+		{
+			for (int i = 0; i < expression.Length; i++)
+			{
+				if (!_allowedCharacters.Contains(expression[i]))
+				{
+					return (false, expression[i]); // první nepovolený znak a jeho index
+				}
+			}
+			return (true, null); // všechny znaky OK
+		}
+		private void checkDotAndRound(ref string expr)
+		{
+			int dotIndex = expr.IndexOf('.');
+			if (dotIndex >= 0)
+			{
+				expr = expr.Substring(0, dotIndex); // vezme jen část před tečkou
+			}
 		}
 	}
 }
