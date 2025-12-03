@@ -33,6 +33,7 @@ namespace IntegerCalculator.Infrastructure
 		{
 			kernel.Bind<MainViewModel>().To<MainViewModel>().InSingletonScope();
 			kernel.Bind<HandCalculatorViewModel>().To<HandCalculatorViewModel>().InSingletonScope();
+			kernel.Bind<FormulaCalculatorViewModel>().To<FormulaCalculatorViewModel>().InSingletonScope();
 
 			return kernel;
 		}

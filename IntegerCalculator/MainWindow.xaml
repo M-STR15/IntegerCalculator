@@ -22,7 +22,7 @@
                 <views:HandCalculator DataContext="{Binding HandCalculatorViewModel}" />
             </TabItem>
             <TabItem Header="File caltulator" >
-                <views:FormulaCalculator />
+                <views:FormulaCalculator DataContext="{Binding FormulaCalculatorViewModel}" />
             </TabItem>
 
         </TabControl>
