@@ -10,6 +10,12 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 		public IEventLogService EventLog { get; }
 		private int _stepNumber = 0;
 
+		private IList<char> _allowedCharacters = new List<char>
+		{
+			'0','1','2','3','4','5','6','7','8','9',
+			'+','-','*','/'
+		};
+
 		// Operátory rozdělené podle precedence
 		private readonly List<List<char>> _operatorsPrecedence = new()
 	{
@@ -23,15 +29,39 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 			EventLog = eventLog;
 		}
 
-		public ExpressionResult EvaluateExpression(string expression)
+		private (bool IsValid, char? InvalidChar) checkAllowedCharacters(string expression)
 		{
-			expression = expression.Replace(" ", "");
-			_stepNumber = 0;
-			CalculationSteps = new();
-			CalculationSteps.Add($"Vstupní výraz: '{expression}'");
+			for (int i = 0; i < expression.Length; i++)
+			{
+				if (!_allowedCharacters.Contains(expression[i]))
+				{
+					return (false, expression[i]); // první nepovolený znak a jeho index
+				}
+			}
+			return (true, null); // všechny znaky OK
+		}
 
+		public ExpressionResult? EvaluateExpression(string expression)
+		{
 			try
 			{
+				expression = expression.Replace(" ", "");
+
+				if (string.IsNullOrEmpty(expression))
+					return default;
+
+				var allowedCharacter = checkAllowedCharacters(expression);
+				if (!allowedCharacter.IsValid)
+				{
+					return new ExpressionResult
+					{
+						Result = $"Error - Invalid character: '{allowedCharacter.InvalidChar}'"
+					};
+				}
+
+				_stepNumber = 0;
+				CalculationSteps = new();
+				CalculationSteps.Add($"Vstupní výraz: '{expression}'");
 				// Pro každý "level" precedence
 				foreach (var ops in _operatorsPrecedence)
 				{
@@ -56,7 +86,7 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 									};
 
 									expression = expression.Substring(0, operation.StartOriginalIndex)
-											   + value.ToString(System.Globalization.CultureInfo.InvariantCulture)
+											   + value.ToString(CultureInfo.InvariantCulture)
 											   + expression.Substring(operation.EndOriginalIndex);
 
 									_stepNumber++;

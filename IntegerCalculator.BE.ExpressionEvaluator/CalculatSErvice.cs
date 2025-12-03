@@ -29,11 +29,6 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 			EventLog = eventLog;
 		}
 
-		private bool containsOnlyAllowedCharacters(string expression)
-		{
-			return expression.All(c => _allowedCharacters.Contains(c));
-		}
-
 		private (bool IsValid, char? InvalidChar) checkAllowedCharacters(string expression)
 		{
 			for (int i = 0; i < expression.Length; i++)
@@ -46,10 +41,15 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 			return (true, null); // všechny znaky OK
 		}
 
-		public ExpressionResult EvaluateExpression(string expression)
+		public ExpressionResult? EvaluateExpression(string expression)
 		{
 			try
 			{
+				expression = expression.Replace(" ", "");
+
+				if (string.IsNullOrEmpty(expression))
+					return default;
+
 				var allowedCharacter = checkAllowedCharacters(expression);
 				if (!allowedCharacter.IsValid)
 				{
@@ -59,7 +59,6 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 					};
 				}
 
-				expression = expression.Replace(" ", "");
 				_stepNumber = 0;
 				CalculationSteps = new();
 				CalculationSteps.Add($"Vstupní výraz: '{expression}'");

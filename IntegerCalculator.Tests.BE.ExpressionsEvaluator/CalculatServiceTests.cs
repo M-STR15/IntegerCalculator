@@ -55,7 +55,7 @@ namespace IntegerCalculator.Tests.BE.ExpressionsEvaluatorTest
 			var result = svc.EvaluateExpression(formula);
 
 			// parsování řetězce na double
-			if (!double.TryParse(result.Result, NumberStyles.Float, CultureInfo.InvariantCulture, out double dblValue))
+			if (!double.TryParse(result?.Result, NumberStyles.Float, CultureInfo.InvariantCulture, out double dblValue))
 			{
 				Assert.True(false, "Výsledek nelze převést na číslo.");
 			}
@@ -97,6 +97,17 @@ namespace IntegerCalculator.Tests.BE.ExpressionsEvaluatorTest
 			var result = svc.EvaluateExpression(formula);
 
 			Assert.Equal(resultTest, result.Result);
+		}
+
+		[Fact]
+		public void EvaluateExpression_CheckNullRow()
+		{
+			var log = new FakeEventLogService();
+			var svc = new CalculatService(log);
+
+			var result = svc.EvaluateExpression("");
+
+			Assert.Equal(null, result);
 		}
 	}
 }

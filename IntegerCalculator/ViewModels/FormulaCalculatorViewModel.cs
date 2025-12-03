@@ -116,7 +116,8 @@ namespace IntegerCalculator.ViewModels
 				foreach (var item in formulas)
 				{
 					var expressionResult = _calculatService.EvaluateExpression(item);
-					listWithResults.Add(expressionResult.Result);
+					if (expressionResult != null)
+						listWithResults.Add(expressionResult.Result);
 				}
 
 				await File.WriteAllLinesAsync(SelectOutputFile, listWithResults);
