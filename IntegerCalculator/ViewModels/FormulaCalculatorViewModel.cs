@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using IntegerCalculator.BE.EventLog.Services;
+using IntegerCalculator.BE.ExpressionEvaluator;
 using Microsoft.Win32;
 using System.Windows.Input;
 
@@ -45,6 +46,8 @@ namespace IntegerCalculator.ViewModels
 		{
 			isMethodGenerateFileRun = true;
 
+			var formuLaGenerator = new FormulaGenerator(1000);
+			var listFormulas= formuLaGenerator.GenerateFormulas();
 			isMethodGenerateFileRun = false;
 		}
 
