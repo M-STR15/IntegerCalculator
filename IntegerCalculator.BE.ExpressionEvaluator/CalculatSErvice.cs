@@ -10,166 +10,153 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 		public IEventLogService EventLog { get; }
 		private int _stepNumber = 0;
 
-		private ICollection<char> _operators = new List<char> { '/', '*', '+', '-' };
+		// Operátory rozdělené podle precedence
+		private readonly List<List<char>> _operatorsPrecedence = new()
+	{
+		new List<char> { '*', '/' }, // nejvyšší priorita
+        new List<char> { '+', '-' }  // nižší priorita
+    };
 
 		public CalculatService(IEventLogService eventLog)
 		{
 			CalculationSteps.Clear();
 			EventLog = eventLog;
 		}
-		/// <summary>
-		/// Vyhodnotí aritmetický výraz zadaný v parametru <paramref name="expression"/>.
-		/// Postupně provede výpočty podle precedence operátorů: nejprve násobení ('*'),
-		/// poté dělení ('/'), následně sčítání ('+') a odčítání ('-').
-		/// </summary>
-		/// <param name="expression">Řetězec obsahující aritmetický výraz k vyhodnocení.</param>
-		/// <returns>
-		/// Řetězec představující výsledek výrazu po provedení všech operací.
-		/// V případě chyby může být vrácen částečný nebo původní výraz; detaily chyby jsou zalogovány.
-		/// </returns>
-		/// <remarks>
-		/// Metoda ořezává počáteční a koncové mezery voláním <see cref="string.Trim()"/> a
-		/// následně volá interní metodu <see cref="calculationOperator(ref string, char)"/>
-		/// pro každý operátor v pořadí precedence. Výjimky uvnitř jsou zachyceny a ohlášeny
-		/// pomocí služby <see cref="IEventLogService"/>.
-		/// </remarks>
-		/// <exception cref="Exception">
-		/// Jakákoli neošetřená výjimka během výpočtu je zachycena a zalogována; metoda však výjimku
-		/// znovu nevyhazuje.
-		/// </exception>
+
 		public ExpressionResult EvaluateExpression(string expression)
 		{
 			expression = expression.Replace(" ", "");
-			_stepNumber = default;
+			_stepNumber = 0;
 			CalculationSteps = new();
 			CalculationSteps.Add($"Vstupní výraz: '{expression}'");
 
-			foreach (var opChar in _operators)
+			try
 			{
-				calculationOperator(ref expression, opChar, true);
+				// Pro každý "level" precedence
+				foreach (var ops in _operatorsPrecedence)
+				{
+					bool hasOperator;
+					do
+					{
+						hasOperator = false;
+						for (int i = 0; i < expression.Length; i++)
+						{
+							if (ops.Contains(expression[i]) && IsBinaryOperator(expression, i))
+							{
+								var operation = findOperations(expression, expression[i]);
+								if (operation != null)
+								{
+									double value = operation.Operator switch
+									{
+										'*' => operation.Left * operation.Right,
+										'/' => operation.Left / operation.Right,
+										'+' => operation.Left + operation.Right,
+										'-' => operation.Left - operation.Right,
+										_ => throw new Exception("Neznámý operátor")
+									};
+
+									expression = expression.Substring(0, operation.StartOriginalIndex)
+											   + value.ToString(System.Globalization.CultureInfo.InvariantCulture)
+											   + expression.Substring(operation.EndOriginalIndex);
+
+									_stepNumber++;
+									CalculationSteps.Add($"{_stepNumber} krok výpočtu: '{expression}'");
+
+									hasOperator = true;
+									break; // restart od začátku, aby se zachovalo pořadí zleva doprava
+								}
+							}
+						}
+					} while (hasOperator);
+				}
+
+				CalculationSteps.Add($"Výsledek: '{expression}'");
+			}
+			catch (Exception ex)
+			{
+				EventLog.LogError(Guid.NewGuid(), ex, $"Chyba při výpočtu výrazu '{expression}': {ex.Message}");
 			}
 
-			CalculationSteps.Add($"Výsledek: '{expression}'");
-			var expressionResult = new ExpressionResult
+			return new ExpressionResult
 			{
 				Result = expression,
 				CalculationSteps = CalculationSteps
 			};
-
-			return expressionResult;
 		}
 
-
-		private void calculationOperator(ref string expression, char opChar, bool withHistory = false)
-		{
-			var isCompleteCalculation = false;
-			try
-			{
-				while (!isCompleteCalculation)
-				{
-					var operation = findOperations(expression, opChar);
-
-					if (operation != null)
-					{
-						var lenghtBeforeOperation = operation.StartOriginalIndex;
-						var firstIndexAfterOperation = operation.EndOriginalIndex;
-
-						var textBefore = expression.Substring(0, lenghtBeforeOperation);
-						var textAfter = expression.Substring(firstIndexAfterOperation);
-
-						expression =
-						  textBefore            // před úsekem
-						   + operation.Value    // nový text
-						   + textAfter;         // za úsekem
-
-						isCompleteCalculation = isCalculationComplete(expression, opChar);
-						var isExistNextOperation = existNextOperation(expression);
-						if (isExistNextOperation && withHistory)
-						{
-							_stepNumber++;
-							CalculationSteps.Add($"{_stepNumber} krok výpočtu: '{expression}'");
-						}
-					}
-					else
-					{
-						isCompleteCalculation = true;
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				var message = $"Chyba při výpočtu výrazu '{expression}' s operátorem '{opChar}': {ex.Message}";
-				EventLog.LogError(Guid.Parse("ed931086-e49f-460a-b6d8-23584a3c7dd5"), ex, message);
-			}
-		}
-
-		private bool existNextOperation(string expression) => _operators.Any(z => expression.Contains(z));
-
-		private bool isCalculationComplete(string expression, char opChar)
-		{
-			var isResult = BigInteger.TryParse(expression, out _);
-			var isOperatorInExpession = expression.Contains(opChar);
-
-			var isContinueCaltulationActulOperator = !isResult && isOperatorInExpession;
-
-			return isResult || !isContinueCaltulationActulOperator;
-		}
-
-		private static Operation? findOperations(string expression, char opChar)
-		{
-			for (int i = 0; i < expression.Length; i++)
-			{
-				if (expression[i] == opChar)
-				{
-					// rozlišit +/- (znaménko vs operátor)
-					if ((opChar == '+' || opChar == '-') && !IsOperator(expression, i))
-						continue;
-
-					// levý operand
-					int leftStart = i - 1;
-					while (leftStart >= 0 && char.IsDigit(expression[leftStart]))
-						leftStart--;
-
-					string leftStr = expression.Substring(leftStart + 1, i - leftStart - 1);
-
-					// pravý operand
-					int rightEnd = i + 1;
-
-					// pokud je první znak + nebo - a je součástí čísla
-					if (rightEnd < expression.Length && (expression[rightEnd] == '+' || expression[rightEnd] == '-'))
-						rightEnd++;
-
-					while (rightEnd < expression.Length && char.IsDigit(expression[rightEnd]))
-						rightEnd++;
-
-					string rightStr = expression.Substring(i + 1, rightEnd - i - 1);
-
-					int startOriginalIndex = leftStart + 1;
-					int endOriginalIndex = rightEnd;
-					var length = endOriginalIndex - startOriginalIndex;
-					var part = expression.Substring(startOriginalIndex, length);
-
-					return new Operation(
-						double.Parse(leftStr),
-						double.Parse(rightStr),
-						startOriginalIndex,
-						endOriginalIndex,
-						opChar,
-						part
-					);
-				}
-			}
-
-			return null;
-		}
-
-		private static bool IsOperator(string expr, int index)
+		private static bool IsBinaryOperator(string expr, int index)
 		{
 			if (index == 0)
 				return false;
 
 			char left = expr[index - 1];
-			return char.IsDigit(left) || left == ')';
+			return char.IsDigit(left) || left == ')' || left == '.';
+		}
+
+		private static Operation? findOperations(string expr, char opChar)
+		{
+			for (int i = 0; i < expr.Length; i++)
+			{
+				if (expr[i] != opChar)
+					continue;
+
+				if ((opChar == '+' || opChar == '-') && !IsBinaryOperator(expr, i))
+					continue;
+
+				int rStart = i + 1;
+				if (rStart >= expr.Length)
+					continue;
+
+				int r = rStart;
+				if (r < expr.Length && (expr[r] == '+' || expr[r] == '-') && !IsBinaryOperator(expr, r))
+					r++;
+
+				while (r < expr.Length && (char.IsDigit(expr[r]) || expr[r] == '.'))
+					r++;
+
+				string rightStr = expr.Substring(rStart, r - rStart);
+
+				int lEnd = i - 1;
+				if (lEnd < 0)
+					continue;
+
+				int l = lEnd;
+				while (l >= 0 && (char.IsDigit(expr[l]) || expr[l] == '.'))
+					l--;
+
+				if (l >= 0 && (expr[l] == '+' || expr[l] == '-') && !IsBinaryOperator(expr, l))
+					l--;
+
+				int lStart = l + 1;
+				string leftStr = expr.Substring(lStart, lEnd - lStart + 1);
+
+				if (!double.TryParse(leftStr, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double leftVal))
+					continue;
+				if (!double.TryParse(rightStr, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double rightVal))
+					continue;
+
+				return new Operation(leftVal, rightVal, lStart, r, opChar, expr.Substring(lStart, r - lStart));
+			}
+
+			return null;
+		}
+
+		private class Operation
+		{
+			public double Left, Right;
+			public int StartOriginalIndex, EndOriginalIndex;
+			public char Operator;
+			public string ExpressionPart;
+			public Operation(double left, double right, int start, int end, char op, string part)
+			{
+				Left = left;
+				Right = right;
+				StartOriginalIndex = start;
+				EndOriginalIndex = end;
+				Operator = op;
+				ExpressionPart = part;
+			}
 		}
 	}
+
 }

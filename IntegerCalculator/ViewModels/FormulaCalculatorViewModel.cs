@@ -26,9 +26,11 @@ namespace IntegerCalculator.ViewModels
 		public ICommand SelectInputFileCommand { get; private set; }
 		public ICommand SelectOutputFileCommand { get; private set; }
 		public ICommand StartCommand { get; private set; }
-		public FormulaCalculatorViewModel(IEventLogService eventLogService)
+		private CalculatService _calculatService;
+		public FormulaCalculatorViewModel(IEventLogService eventLogService, CalculatService calculatService)
 		{
 			_eventLogService = eventLogService;
+			_calculatService = calculatService;
 
 			SelectInputFileCommand = new Helpers.RelayCommand(onSelectFile, canSelectInputFile);
 			GenerateInputFileCommand = new Helpers.RelayCommand(onGenerateInputFile, canGenerateFile);
@@ -102,18 +104,22 @@ namespace IntegerCalculator.ViewModels
 			isMethodSelectOutputFileRun = false;
 		}
 
-		private void onStart(object parameter)
+		private async void onStart(object parameter)
 		{
 			isMethodStartRun = true;
 
 			var existInputFile = File.Exists(SelectInputFile);
+			var listWithResults = new List<string>();
 			if (existInputFile)
 			{
-				var formulas= File.ReadAllLines(SelectInputFile);
+				var formulas = File.ReadAllLines(SelectInputFile);
 				foreach (var item in formulas)
 				{
-
+					var expressionResult = _calculatService.EvaluateExpression(item);
+					listWithResults.Add(expressionResult.Result);
 				}
+
+				await File.WriteAllLinesAsync(SelectOutputFile, listWithResults);
 			}
 			else
 			{
