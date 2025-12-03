@@ -1,5 +1,6 @@
 ﻿using IntegerCalculator.BE.ExpressionEvaluator;
 using IntegerCalculator.Tests.BE.ExpressionsEvaluatorTestt.Fakes;
+using System.Numerics;
 
 namespace IntegerCalculator.Tests.BE.ExpressionsEvaluatorTest
 {
@@ -39,14 +40,18 @@ namespace IntegerCalculator.Tests.BE.ExpressionsEvaluatorTest
 		[InlineData("2-5/5", "1")]
 		[InlineData("5-5", "0")]
 		[InlineData("5-15", "-10")]
-		[InlineData("1+1+2+3-4/4*2","5")]
+		[InlineData("1+1+2+3-4/4*2", "5")]
+		[InlineData("1+-1", "0")]
+		[InlineData("1--1", "2")]
 		public void EvaluateExpression_OperatorPrecedence(string formula, string resultTest)
 		{
 			var log = new FakeEventLogService();
 			var svc = new CalculatService(log);
 
 			var result = svc.EvaluateExpression(formula);
-
+			
+			BigInteger parsedValue; // out proměnná
+			Assert.True(BigInteger.TryParse(result.Result, out parsedValue), "Očekávaný výsledek NEBUDE analyzovatelný jako velké celé číslo.");
 			Assert.Equal(resultTest, result.Result);
 		}
 
