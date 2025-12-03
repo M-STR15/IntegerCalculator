@@ -85,6 +85,19 @@ namespace IntegerCalculator.Tests.BE.ExpressionsEvaluatorTest
 
 			Assert.Equal("2", result.Result);
 		}
+
+		[Theory]
+		[InlineData("a + 1", "Error - Invalid character: 'a'")]
+		[InlineData("2.1*2", "Error - Invalid character: '.'")]
+		public void EvaluateExpression_CheckAllowedCharacters(string formula, string resultTest)
+		{
+			var log = new FakeEventLogService();
+			var svc = new CalculatService(log);
+
+			var result = svc.EvaluateExpression(formula);
+
+			Assert.Equal(resultTest, result.Result);
+		}
 	}
 }
 

@@ -1,6 +1,6 @@
 ﻿using IntegerCalculator.BE.EventLog.Services;
 using IntegerCalculator.BE.ExpressionEvaluator.Models;
-using System.Numerics;
+using System.Globalization;
 
 namespace IntegerCalculator.BE.ExpressionEvaluator
 {
@@ -9,6 +9,12 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 		public List<string> CalculationSteps { get; set; } = new();
 		public IEventLogService EventLog { get; }
 		private int _stepNumber = 0;
+
+		private IList<char> _allowedCharacters = new List<char>
+		{
+			'0','1','2','3','4','5','6','7','8','9',
+			'+','-','*','/'
+		};
 
 		// Operátory rozdělené podle precedence
 		private readonly List<List<char>> _operatorsPrecedence = new()
@@ -23,15 +29,40 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 			EventLog = eventLog;
 		}
 
+		private bool containsOnlyAllowedCharacters(string expression)
+		{
+			return expression.All(c => _allowedCharacters.Contains(c));
+		}
+
+		private (bool IsValid, char? InvalidChar) checkAllowedCharacters(string expression)
+		{
+			for (int i = 0; i < expression.Length; i++)
+			{
+				if (!_allowedCharacters.Contains(expression[i]))
+				{
+					return (false, expression[i]); // první nepovolený znak a jeho index
+				}
+			}
+			return (true, null); // všechny znaky OK
+		}
+
 		public ExpressionResult EvaluateExpression(string expression)
 		{
-			expression = expression.Replace(" ", "");
-			_stepNumber = 0;
-			CalculationSteps = new();
-			CalculationSteps.Add($"Vstupní výraz: '{expression}'");
-
 			try
 			{
+				var allowedCharacter = checkAllowedCharacters(expression);
+				if (!allowedCharacter.IsValid)
+				{
+					return new ExpressionResult
+					{
+						Result = $"Error - Invalid character: '{allowedCharacter.InvalidChar}'"
+					};
+				}
+
+				expression = expression.Replace(" ", "");
+				_stepNumber = 0;
+				CalculationSteps = new();
+				CalculationSteps.Add($"Vstupní výraz: '{expression}'");
 				// Pro každý "level" precedence
 				foreach (var ops in _operatorsPrecedence)
 				{
@@ -56,7 +87,7 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 									};
 
 									expression = expression.Substring(0, operation.StartOriginalIndex)
-											   + value.ToString(System.Globalization.CultureInfo.InvariantCulture)
+											   + value.ToString(CultureInfo.InvariantCulture)
 											   + expression.Substring(operation.EndOriginalIndex);
 
 									_stepNumber++;
@@ -130,9 +161,9 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 				int lStart = l + 1;
 				string leftStr = expr.Substring(lStart, lEnd - lStart + 1);
 
-				if (!double.TryParse(leftStr, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double leftVal))
+				if (!double.TryParse(leftStr, NumberStyles.Float, CultureInfo.InvariantCulture, out double leftVal))
 					continue;
-				if (!double.TryParse(rightStr, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double rightVal))
+				if (!double.TryParse(rightStr, NumberStyles.Float, CultureInfo.InvariantCulture, out double rightVal))
 					continue;
 
 				return new Operation(leftVal, rightVal, lStart, r, opChar, expr.Substring(lStart, r - lStart));
@@ -140,23 +171,5 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 
 			return null;
 		}
-
-		private class Operation
-		{
-			public double Left, Right;
-			public int StartOriginalIndex, EndOriginalIndex;
-			public char Operator;
-			public string ExpressionPart;
-			public Operation(double left, double right, int start, int end, char op, string part)
-			{
-				Left = left;
-				Right = right;
-				StartOriginalIndex = start;
-				EndOriginalIndex = end;
-				Operator = op;
-				ExpressionPart = part;
-			}
-		}
 	}
-
 }
