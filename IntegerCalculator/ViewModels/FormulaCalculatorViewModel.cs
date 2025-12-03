@@ -2,6 +2,8 @@
 using IntegerCalculator.BE.EventLog.Services;
 using IntegerCalculator.BE.ExpressionEvaluator;
 using Microsoft.Win32;
+using System.IO;
+using System.Windows;
 using System.Windows.Input;
 
 namespace IntegerCalculator.ViewModels
@@ -32,22 +34,30 @@ namespace IntegerCalculator.ViewModels
 			GenerateInputFileCommand = new Helpers.RelayCommand(onGenerateInputFile, canGenerateFile);
 			SelectOutputFileCommand = new Helpers.RelayCommand(onSelectOutputFile, canSelectOutputFile);
 			StartCommand = new Helpers.RelayCommand(onStart, canStart);
+
+			var actualFolder = System.IO.Directory.GetCurrentDirectory();
+
+			SelectInputFile = string.Format($"{actualFolder}\\Input_Formulas.txt");
+			SelectOutputFile = string.Format($"{actualFolder}\\Output_FormulaResults.txt");
 		}
 
-		private bool canGenerateFile()=> !isMethodGenerateFileRun;
-		
-		private bool canSelectInputFile()=> !isMethodSelectInputFileRun;
+		private bool canGenerateFile() => !isMethodGenerateFileRun;
 
-		private bool canSelectOutputFile()=> !isMethodSelectOutputFileRun;
-		
-		private bool canStart()=> !isMethodStartRun && !string.IsNullOrEmpty(SelectInputFile) && !string.IsNullOrEmpty(SelectOutputFile);
-		
-		private void onGenerateInputFile(object parameter)
+		private bool canSelectInputFile() => !isMethodSelectInputFileRun;
+
+		private bool canSelectOutputFile() => !isMethodSelectOutputFileRun;
+
+		private bool canStart() => !isMethodStartRun && !string.IsNullOrEmpty(SelectInputFile) && !string.IsNullOrEmpty(SelectOutputFile);
+
+		private async void onGenerateInputFile(object parameter)
 		{
 			isMethodGenerateFileRun = true;
 
 			var formuLaGenerator = new FormulaGenerator(1000);
-			var listFormulas= formuLaGenerator.GenerateFormulas();
+			var listFormulas = formuLaGenerator.GenerateFormulas();
+
+			await File.WriteAllLinesAsync(SelectInputFile, listFormulas);
+
 			isMethodGenerateFileRun = false;
 		}
 
@@ -82,7 +92,7 @@ namespace IntegerCalculator.ViewModels
 
 			var dlg = new OpenFolderDialog
 			{
-				Title = "Vyber složku"
+				Title = "Selected folder"
 			};
 
 			if (dlg.ShowDialog() == true)
@@ -95,6 +105,20 @@ namespace IntegerCalculator.ViewModels
 		private void onStart(object parameter)
 		{
 			isMethodStartRun = true;
+
+			var existInputFile = File.Exists(SelectInputFile);
+			if (existInputFile)
+			{
+				var formulas= File.ReadAllLines(SelectInputFile);
+				foreach (var item in formulas)
+				{
+
+				}
+			}
+			else
+			{
+				MessageBox.Show("Vstupní soubor neexistuje.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
 
 			isMethodStartRun = false;
 		}
