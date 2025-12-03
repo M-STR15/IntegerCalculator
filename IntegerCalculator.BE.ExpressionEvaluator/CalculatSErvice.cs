@@ -76,14 +76,7 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 								var operation = findOperations(expression, expression[i]);
 								if (operation != null)
 								{
-									double value = operation.Operator switch
-									{
-										'*' => operation.Left * operation.Right,
-										'/' => operation.Left / operation.Right,
-										'+' => operation.Left + operation.Right,
-										'-' => operation.Left - operation.Right,
-										_ => throw new Exception("Neznámý operátor")
-									};
+									double value = operation.Value;
 
 									expression = expression.Substring(0, operation.StartOriginalIndex)
 											   + value.ToString(CultureInfo.InvariantCulture)
@@ -100,18 +93,30 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 					} while (hasOperator);
 				}
 
+				checkDotAndRound(ref expression);
+
 				CalculationSteps.Add($"Výsledek: '{expression}'");
+
+				return new ExpressionResult
+				{
+					Result = expression,
+					CalculationSteps = CalculationSteps
+				};
 			}
 			catch (Exception ex)
 			{
 				EventLog.LogError(Guid.NewGuid(), ex, $"Chyba při výpočtu výrazu '{expression}': {ex.Message}");
+				return default;
 			}
+		}
 
-			return new ExpressionResult
+		private void checkDotAndRound(ref string expr)
+		{
+			int dotIndex = expr.IndexOf('.');
+			if (dotIndex >= 0)
 			{
-				Result = expression,
-				CalculationSteps = CalculationSteps
-			};
+				expr = expr.Substring(0, dotIndex); // vezme jen část před tečkou
+			}
 		}
 
 		private static bool isBinaryOperator(string expr, int index)

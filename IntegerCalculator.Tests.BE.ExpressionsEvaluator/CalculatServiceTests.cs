@@ -46,7 +46,7 @@ namespace IntegerCalculator.Tests.BE.ExpressionsEvaluatorTest
 		[InlineData("1--1", "2")]
 		[InlineData("-72+-250", "-322")]
 		[InlineData("390*100*-434", "-16926000")]
-		[InlineData("-318/-671/327*-223", "-0.32319282462161090526258220648355")]
+		[InlineData("-318/-671/327*-223", "0")]
 		public void EvaluateExpression_OperatorPrecedence(string formula, string resultTest)
 		{
 			var log = new FakeEventLogService();
@@ -84,6 +84,17 @@ namespace IntegerCalculator.Tests.BE.ExpressionsEvaluatorTest
 			var result = svc.EvaluateExpression("10/2-3");
 
 			Assert.Equal("2", result.Result);
+		}
+
+		[Fact]
+		public void EvaluateExpression_RoundingCheck()
+		{
+			var log = new FakeEventLogService();
+			var svc = new CalculatService(log);
+
+			var result = svc.EvaluateExpression("2/3");
+
+			Assert.Equal("0", result?.Result);
 		}
 
 		[Theory]
