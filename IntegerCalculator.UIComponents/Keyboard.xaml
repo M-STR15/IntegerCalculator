@@ -74,7 +74,8 @@
             Grid.ColumnSpan="3"
             Click="OnCharacterButtonClick"
             Content="C"
-            Style="{StaticResource CalcButtonStyle}" />
+            Style="{StaticResource CalcButtonStyle}"
+            Visibility="Collapsed" />
         <Button
             Grid.Row="0"
             Grid.Column="3"
