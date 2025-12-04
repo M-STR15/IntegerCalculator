@@ -1,0 +1,64 @@
+﻿<Window
+    x:Class="IntegerCalculator.Windows.FormulasGeneratorWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:IntegerCalculator.Windows"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="FormulasGeneratorWindow"
+    Width="900"
+    Height="250"
+    mc:Ignorable="d">
+
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Margin" Value="5" />
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="5" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="5" />
+        </Style>
+        <Style x:Key="startBtn" TargetType="Button">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="Background" Value="Green" />
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Content="Input File" />
+        <Label Grid.Row="1" Content="{Binding SelectInputFile}" />
+        <Label Grid.Row="2" Content="Number of Formula" />
+        <TextBox Grid.Row="3" Text="{Binding NumberOfFormula}" />
+
+        <Button
+            Grid.Row="4"
+            Command="{Binding GenerateInputFileCommand}"
+            Content="Start"
+            Style="{StaticResource startBtn}" />
+        <Grid Grid.Row="5" Margin="5">
+
+            <ProgressBar
+                x:Name="progressBar"
+                Height="22"
+                Maximum="100"
+                Minimum="0"
+                Value="{Binding ProgressGeneration}" />
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Run Text="{Binding ProgressGeneration, FallbackValue=0}" />
+                <Run Text="%" />
+            </TextBlock>
+        </Grid>
+
+    </Grid>
+</Window>

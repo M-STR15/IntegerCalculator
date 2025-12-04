@@ -19,6 +19,7 @@
         </Style>
         <Style x:Key="startBtn" TargetType="Button">
             <Setter Property="Width" Value="500" />
+            <Setter Property="Margin" Value="5" />
             <Setter Property="Background" Value="Green" />
         </Style>
     </UserControl.Resources>
@@ -72,9 +73,9 @@
                 Height="22"
                 Maximum="100"
                 Minimum="0"
-                Value="{Binding ProgressExpression}" />
+                Value="{Binding ProgressGeneration}" />
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Run Text="{Binding ProgressExpression,FallbackValue=0}" />
+                <Run Text="{Binding ProgressGeneration, FallbackValue=0}" />
                 <Run Text="%" />
             </TextBlock>
         </Grid>

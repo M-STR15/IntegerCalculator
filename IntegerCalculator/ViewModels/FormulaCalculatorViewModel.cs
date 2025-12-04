@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using IntegerCalculator.BE.EventLog.Services;
 using IntegerCalculator.BE.ExpressionEvaluator;
+using IntegerCalculator.Windows;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows;
@@ -54,26 +55,15 @@ namespace IntegerCalculator.ViewModels
 
 		private bool canStart() => !IsMethodStartRun && !string.IsNullOrEmpty(SelectInputFile) && !string.IsNullOrEmpty(SelectOutputFile);
 
-		private async void onGenerateInputFile(object parameter)
+		private void onGenerateInputFile(object parameter)
 		{
 			isMethodGenerateFileRun = true;
 
-			var formuLaGenerator = new FormulaGenerator();
-			var numberOfFormula = 100000000;
-			if (!File.Exists(SelectInputFile))
-				File.Create(SelectInputFile);
+			var newWindow = new FormulasGeneratorWindow();
+			//newWindow.Owner = this; 
+			newWindow.DataContext = new FormulasGeneratorViewModel(SelectInputFile);
+			bool? result = newWindow.ShowDialog();
 
-			using (var writer = new StreamWriter(SelectInputFile))
-			{
-				for (int i = 0; i < numberOfFormula; i++)
-				{
-					var formula = await formuLaGenerator.GenerateFormulaAsync();
-
-					if (formula != null)
-						await writer.WriteLineAsync(formula);
-				}
-			}
-			 
 			isMethodGenerateFileRun = false;
 		}
 
