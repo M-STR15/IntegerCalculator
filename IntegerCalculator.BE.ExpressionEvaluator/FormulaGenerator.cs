@@ -26,13 +26,17 @@
 				{
 					var selectOperator = new Random().Next(0, countOperators - 1);
 					formula += _operators[selectOperator];
-					var generateAnError = new Random().Next(0, 1);
-					if (generateAnError == 0)
-						formula += new Random().Next(-1000, 1000).ToString();
-					else
-					{
+
+					bool generateAnError = new Random().NextDouble() < 0.1;
+
+					if (generateAnError)
+					{ 
 						char letter = letters[new Random().Next(letters.Length)];
 						formula += letter.ToString();
+					}
+					else
+					{
+						formula += new Random().Next(-1000, 1000).ToString();
 					}
 				}
 

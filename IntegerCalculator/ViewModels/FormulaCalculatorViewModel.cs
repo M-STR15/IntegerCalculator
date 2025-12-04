@@ -8,8 +8,7 @@ using System.Windows.Input;
 
 namespace IntegerCalculator.ViewModels
 {
-	[ObservableObject]
-	public partial class FormulaCalculatorViewModel
+	public partial class FormulaCalculatorViewModel:ObservableObject
 	{
 		private IEventLogService _eventLogService;
 		[ObservableProperty]
