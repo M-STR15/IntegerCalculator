@@ -13,11 +13,12 @@
 
 		public IList<string> GenerateFormulas()
 		{
-			var countOperators = _operators.Count;
 			var formulas = new List<string>();
+			string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 			for (int i = 0; i < NumberOfFormula; i++)
 			{
+				var countOperators = _operators.Count;
 				var numberOfOperators = new Random().Next(1, countOperators); // Náhodný počet operátorů mezi 1 a 4
 				var formula = "";
 				formula = new Random().Next(-1000, 1000).ToString();
@@ -25,7 +26,14 @@
 				{
 					var selectOperator = new Random().Next(0, countOperators - 1);
 					formula += _operators[selectOperator];
-					formula += new Random().Next(-1000, 1000).ToString();
+					var generateAnError = new Random().Next(0, 1);
+					if (generateAnError == 0)
+						formula += new Random().Next(-1000, 1000).ToString();
+					else
+					{
+						char letter = letters[new Random().Next(letters.Length)];
+						formula += letter.ToString();
+					}
 				}
 
 				formulas.Add(formula);
