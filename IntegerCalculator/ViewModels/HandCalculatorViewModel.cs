@@ -5,8 +5,7 @@ using System.Windows.Input;
 
 namespace IntegerCalculator.ViewModels
 {
-	[ObservableObject]
-	public partial class HandCalculatorViewModel
+	public partial class HandCalculatorViewModel:ObservableObject
 	{
 		private static readonly char[] AllowedChars = "0123456789+-*/".ToCharArray();
 
@@ -40,11 +39,16 @@ namespace IntegerCalculator.ViewModels
 
 		private void onEqualsCommand_Execute(object parameter)
 		{
-			var expressionResult = _calculatService.EvaluateExpression(ValueDisplay);
+			var expressionResult = _calculatService.EvaluateExpression(ValueDisplay, true);
 			CalculationSteps.Clear();
-			foreach (var item in expressionResult.CalculationSteps)
+			if (expressionResult != null)
 			{
-				CalculationSteps.Add(item);
+				foreach (var item in expressionResult.CalculationSteps)
+				{
+					CalculationSteps.Add(item);
+				}
+
+				ValueDisplay = expressionResult.Result;
 			}
 		}
 	}

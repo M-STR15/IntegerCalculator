@@ -25,7 +25,7 @@ namespace IntegerCalculator.Tests.BE.ExpressionsEvaluatorTest
 			var log = new FakeEventLogService();
 			var svc = new CalculatService(log);
 
-			var result = svc.EvaluateExpression("3*4+2");
+			var result = svc.EvaluateExpression("3*4+2", true);
 
 			Assert.Equal("14", result.Result);
 			// history should include input and final result markers
