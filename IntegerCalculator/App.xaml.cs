@@ -5,6 +5,7 @@ using System.Windows.Input;
 using IntegerCalculator.BE.ExpressionEvaluator.Infrastructure;
 using IntegerCalculator.BE.EventLog.Infrastructure;
 using IntegerCalculator.Infrastructure;
+using IntegerCalculator.BE.Shared.Infrastructure;
 
 namespace IntegerCalculator
 {
@@ -36,7 +37,7 @@ namespace IntegerCalculator
 		{
 			Kernel = new StandardKernel();
 
-
+			Kernel.AddIntegerCalculatorBESharedInfrastructure();
 			Kernel.AddIntegerCalculatorBEExpressionEvaluatorInfrastructure();
 			Kernel.AddIntegerCalculatorBEEventLog();
 			Kernel.AddIntegerCalculatorInfrastructure();

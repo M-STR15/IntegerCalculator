@@ -11,20 +11,32 @@
     Background="Black"
     mc:Ignorable="d">
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100*" />
-            <ColumnDefinition Width="113*" />
-        </Grid.ColumnDefinitions>
-        <TabControl Grid.ColumnSpan="2" Margin="10,10,10,10" Background="Transparent">
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Margin" Value="5" />
+        </Style>
+    </Window.Resources>
 
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <TabControl
+            Grid.Row="0"
+            Margin="10,10,10,10"
+            Background="Transparent">
             <TabItem Header="Calculator">
                 <views:HandCalculator DataContext="{Binding HandCalculatorViewModel}" />
             </TabItem>
-            <TabItem Header="File caltulator" >
+            <TabItem Header="File caltulator">
                 <views:FormulaCalculator DataContext="{Binding FormulaCalculatorViewModel}" />
             </TabItem>
-
         </TabControl>
+        <Label
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            Content="{Binding VersionSW, FallbackValue=xx.xx.xx, TargetNullValue=xx.xx.xx}" />
     </Grid>
 </Window>
