@@ -1,9 +1,9 @@
 ﻿using IntegerCalculator.BE.ExpressionEvaluator;
-using IntegerCalculator.Tests.BE.ExpressionsEvaluatorTestt.Fakes;
+using IntegerCalculator.Tests.BE.ExpressionsEvaluatorUnitTest.Fakes;
 using System.Globalization;
 using System.Numerics;
 
-namespace IntegerCalculator.Tests.BE.ExpressionsEvaluatorTest
+namespace IntegerCalculator.Tests.BE.ExpressionsEvaluatorUnitTest
 {
 	public class CalculatServiceTests
 	{

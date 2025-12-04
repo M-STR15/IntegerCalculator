@@ -1,6 +1,6 @@
 ﻿using IntegerCalculator.BE.EventLog.Services;
 
-namespace IntegerCalculator.Tests.BE.ExpressionsEvaluatorTestt.Fakes
+namespace IntegerCalculator.Tests.BE.ExpressionsEvaluatorUnitTest.Fakes
 {
 	internal class FakeEventLogService : IEventLogService
 	{

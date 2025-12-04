@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegerCalculator.BE.Expres
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BE", "BE", "{14D2C8EA-5BC3-44CF-B60D-CBD327683321}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegerCalculator.Tests.BE.ExpressionsEvaluatorTestt", "IntegerCalculator.Tests.BE.ExpressionsEvaluator\IntegerCalculator.Tests.BE.ExpressionsEvaluatorTestt.csproj", "{70213317-5F34-491B-8819-07359332CA65}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegerCalculator.Tests.BE.ExpressionsEvaluatorUnitTest", "IntegerCalculator.Tests.BE.ExpressionsEvaluator\IntegerCalculator.Tests.BE.ExpressionsEvaluatorUnitTest.csproj", "{70213317-5F34-491B-8819-07359332CA65}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Documents", "_Documents", "{DC1F19A2-AE32-4EF2-817A-8FDFE23356C3}"
 	ProjectSection(SolutionItems) = preProject
