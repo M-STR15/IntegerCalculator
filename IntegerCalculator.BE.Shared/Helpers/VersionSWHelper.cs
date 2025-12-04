@@ -9,7 +9,7 @@ namespace IntegerCalculator.BE.Shared.Helpers
 			//var assembly = Assembly.GetExecutingAssembly();
 			//var version = FileVersionInfo.GetVersionInfo(assembly.Location);
 			var version = Assembly.GetEntryAssembly()?.GetName()?.Version;
-			var versionStr = string.Format($"{version.Major}.{version.Minor}.{version.Build}");
+			var versionStr = string.Format($"{version?.Major}.{version?.Minor}.{version?.Build}");
 			var typeRelease = " DEBUG";
 #if RELEASE
 			typeRelease = "";
