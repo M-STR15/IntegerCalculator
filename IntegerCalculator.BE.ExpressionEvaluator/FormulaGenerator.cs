@@ -2,48 +2,64 @@
 {
 	public class FormulaGenerator
 	{
-		public int NumberOfFormula { get; private set; }
 		private IList<char> _operators;
 
-		public FormulaGenerator(int numberOfFormula)
+		public FormulaGenerator()
 		{
-			NumberOfFormula = numberOfFormula;
 			_operators = new List<char> { '/', '*', '+', '-' };
 		}
 
-		public IList<string> GenerateFormulas()
+		public async Task<IList<string>> GenerateFormulasAsync(int numberOfFormula)
 		{
-			var formulas = new List<string>();
-			string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-			for (int i = 0; i < NumberOfFormula; i++)
+			return await Task.Run(() =>
 			{
-				var countOperators = _operators.Count;
-				var numberOfOperators = new Random().Next(1, countOperators); // Náhodný počet operátorů mezi 1 a 4
-				var formula = "";
-				formula = new Random().Next(-1000, 1000).ToString();
-				for (int o = 0; o < numberOfOperators; o++)
+				var formulas = new List<string>();
+				string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+				var rnd = new Random();
+
+				for (int i = 0; i < numberOfFormula; i++)
 				{
-					var selectOperator = new Random().Next(0, countOperators - 1);
-					formula += _operators[selectOperator];
-
-					bool generateAnError = new Random().NextDouble() < 0.1;
-
-					if (generateAnError)
-					{ 
-						char letter = letters[new Random().Next(letters.Length)];
-						formula += letter.ToString();
-					}
-					else
-					{
-						formula += new Random().Next(-1000, 1000).ToString();
-					}
+					var formula = GenerateFormulaAsync().Result;
+					formulas.Add(formula);
 				}
 
-				formulas.Add(formula);
-			}
+				return (IList<string>)formulas;
+			});
+		}
 
-			return formulas;
+		public async Task<string> GenerateFormulaAsync()
+		{
+			return await Task.Run(() =>
+		   {
+			   string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			   var rnd = new Random();
+
+
+			   var countOperators = _operators.Count;
+			   var numberOfOperators = rnd.Next(1, countOperators);
+
+			   var formula = rnd.Next(-1000, 1000).ToString();
+
+			   for (int o = 0; o < numberOfOperators; o++)
+			   {
+				   var selectOperator = rnd.Next(0, countOperators);
+				   formula += _operators[selectOperator];
+
+				   bool generateAnError = rnd.NextDouble() < 0.1;
+
+				   if (generateAnError)
+				   {
+					   char letter = letters[rnd.Next(letters.Length)];
+					   formula += letter;
+				   }
+				   else
+				   {
+					   formula += rnd.Next(-1000, 1000).ToString();
+				   }
+			   }
+
+			   return formula;
+		   });
 		}
 	}
 }

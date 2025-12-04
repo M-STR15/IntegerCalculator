@@ -30,6 +30,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -62,5 +63,20 @@
             Command="{Binding StartCommand}"
             Content="Start"
             Style="{StaticResource startBtn}" />
+        <Grid
+            Grid.Row="5"
+            Grid.ColumnSpan="2"
+            Margin="5">
+            <ProgressBar
+                x:Name="progressBar"
+                Height="22"
+                Maximum="100"
+                Minimum="0"
+                Value="{Binding ProgressExpression}" />
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Run Text="{Binding ProgressExpression,FallbackValue=0}" />
+                <Run Text="%" />
+            </TextBlock>
+        </Grid>
     </Grid>
 </UserControl>

@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace IntegerCalculator.ViewModels
 {
-	public partial class FormulaCalculatorViewModel:ObservableObject
+	public partial class FormulaCalculatorViewModel : ObservableObject
 	{
 		private IEventLogService _eventLogService;
 		[ObservableProperty]
@@ -17,10 +17,14 @@ namespace IntegerCalculator.ViewModels
 		[ObservableProperty]
 		private string _selectOutputFile;
 
+		[ObservableProperty]
+		private int _progressExpression;
+
 		private bool isMethodGenerateFileRun = false;
 		private bool isMethodSelectInputFileRun = false;
 		private bool isMethodSelectOutputFileRun = false;
-		private bool isMethodStartRun = false;
+		[ObservableProperty]
+		private bool _isMethodStartRun;
 		public ICommand GenerateInputFileCommand { get; private set; }
 		public ICommand SelectInputFileCommand { get; private set; }
 		public ICommand SelectOutputFileCommand { get; private set; }
@@ -36,10 +40,10 @@ namespace IntegerCalculator.ViewModels
 			SelectOutputFileCommand = new Helpers.RelayCommand(onSelectOutputFile, canSelectOutputFile);
 			StartCommand = new Helpers.RelayCommand(onStart, canStart);
 
-			var actualFolder = System.IO.Directory.GetCurrentDirectory();
+			var actualFolder = Directory.GetCurrentDirectory();
 
-			SelectInputFile = string.Format($"{actualFolder}\\Input_Formulas.txt");
-			SelectOutputFile = string.Format($"{actualFolder}\\Output_FormulaResults.txt");
+			SelectInputFile = string.Format($"{actualFolder}\\_Input_Formulas.txt");
+			SelectOutputFile = string.Format($"{actualFolder}\\_Output_FormulaResults.txt");
 		}
 
 		private bool canGenerateFile() => !isMethodGenerateFileRun;
@@ -48,17 +52,28 @@ namespace IntegerCalculator.ViewModels
 
 		private bool canSelectOutputFile() => !isMethodSelectOutputFileRun;
 
-		private bool canStart() => !isMethodStartRun && !string.IsNullOrEmpty(SelectInputFile) && !string.IsNullOrEmpty(SelectOutputFile);
+		private bool canStart() => !IsMethodStartRun && !string.IsNullOrEmpty(SelectInputFile) && !string.IsNullOrEmpty(SelectOutputFile);
 
 		private async void onGenerateInputFile(object parameter)
 		{
 			isMethodGenerateFileRun = true;
 
-			var formuLaGenerator = new FormulaGenerator(1000);
-			var listFormulas = formuLaGenerator.GenerateFormulas();
+			var formuLaGenerator = new FormulaGenerator();
+			var numberOfFormula = 100000000;
+			if (!File.Exists(SelectInputFile))
+				File.Create(SelectInputFile);
 
-			await File.WriteAllLinesAsync(SelectInputFile, listFormulas);
+			using (var writer = new StreamWriter(SelectInputFile))
+			{
+				for (int i = 0; i < numberOfFormula; i++)
+				{
+					var formula = await formuLaGenerator.GenerateFormulaAsync();
 
+					if (formula != null)
+						await writer.WriteLineAsync(formula);
+				}
+			}
+			 
 			isMethodGenerateFileRun = false;
 		}
 
@@ -105,28 +120,39 @@ namespace IntegerCalculator.ViewModels
 
 		private async void onStart(object parameter)
 		{
-			isMethodStartRun = true;
+			IsMethodStartRun = true;
+			ProgressExpression = 0;
 
 			var existInputFile = File.Exists(SelectInputFile);
 			var listWithResults = new List<string>();
 			if (existInputFile)
 			{
-				var formulas = File.ReadAllLines(SelectInputFile);
-				foreach (var item in formulas)
+				using (var reader = new StreamReader(SelectInputFile))
+				using (var writer = new StreamWriter(SelectOutputFile))
 				{
-					var expressionResult = _calculatService.EvaluateExpression(item);
-					if (expressionResult != null)
-						listWithResults.Add(expressionResult.Result);
-				}
+					string? line;
+					int stepProgress = 0;
 
-				await File.WriteAllLinesAsync(SelectOutputFile, listWithResults);
+					int countProgress = File.ReadLines(SelectInputFile).Count();
+
+					while ((line = reader.ReadLine()) != null)
+					{
+						var expressionResult = _calculatService.EvaluateExpression(line);
+
+						if (expressionResult != null)
+							await writer.WriteLineAsync(expressionResult.Result);
+
+						stepProgress++;
+						ProgressExpression = (stepProgress * 100) / countProgress;
+					}
+				}
 			}
 			else
 			{
 				MessageBox.Show("Vstupní soubor neexistuje.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 
-			isMethodStartRun = false;
+			IsMethodStartRun = false;
 		}
 	}
 }
