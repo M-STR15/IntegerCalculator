@@ -62,6 +62,7 @@ namespace IntegerCalculator.ViewModels
 			}
 			finally
 			{
+				ProgressGeneration = 100;
 				isMethodGenerateFileRun = false;
 			}
 		}
