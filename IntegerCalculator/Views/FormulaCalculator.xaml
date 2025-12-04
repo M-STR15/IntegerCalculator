@@ -73,9 +73,9 @@
                 Height="22"
                 Maximum="100"
                 Minimum="0"
-                Value="{Binding ProgressGeneration}" />
+                Value="{Binding ProgressExpression}" />
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Run Text="{Binding ProgressGeneration, FallbackValue=0}" />
+                <Run Text="{Binding ProgressExpression, FallbackValue=0}" />
                 <Run Text="%" />
             </TextBlock>
         </Grid>

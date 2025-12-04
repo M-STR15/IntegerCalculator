@@ -19,7 +19,7 @@ namespace IntegerCalculator.ViewModels
 		private string _selectOutputFile;
 
 		[ObservableProperty]
-		private int _progressExpression;
+		private double _progressExpression;
 
 		private bool isMethodGenerateFileRun = false;
 		private bool isMethodSelectInputFileRun = false;
@@ -61,7 +61,7 @@ namespace IntegerCalculator.ViewModels
 
 			var newWindow = new FormulasGeneratorWindow();
 			//newWindow.Owner = this; 
-			newWindow.DataContext = new FormulasGeneratorViewModel(SelectInputFile);
+			newWindow.DataContext = new FormulasGeneratorViewModel(SelectInputFile, _eventLogService);
 			bool? result = newWindow.ShowDialog();
 
 			isMethodGenerateFileRun = false;
@@ -121,19 +121,20 @@ namespace IntegerCalculator.ViewModels
 				using (var writer = new StreamWriter(SelectOutputFile))
 				{
 					string? line;
-					int stepProgress = 0;
+					double stepProgress = 0;
 
-					int countProgress = File.ReadLines(SelectInputFile).Count();
+					double countProgress = File.ReadLines(SelectInputFile).Count();
 
 					while ((line = reader.ReadLine()) != null)
 					{
-						var expressionResult = _calculatService.EvaluateExpression(line);
+						var expressionResult = await _calculatService.EvaluateExpressionAsync(line);
 
 						if (expressionResult != null)
 							await writer.WriteLineAsync(expressionResult.Result);
 
 						stepProgress++;
-						ProgressExpression = (stepProgress * 100) / countProgress;
+						var percent= (stepProgress * 100) / countProgress;
+						ProgressExpression =Math.Round(percent,4);
 					}
 				}
 			}

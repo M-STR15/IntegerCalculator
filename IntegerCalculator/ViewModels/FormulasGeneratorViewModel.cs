@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using IntegerCalculator.BE.EventLog.Services;
 using IntegerCalculator.BE.ExpressionEvaluator;
 using System.IO;
 using System.Windows.Input;
@@ -19,8 +20,10 @@ namespace IntegerCalculator.ViewModels
 
 		private bool isMethodGenerateFileRun = false;
 		public ICommand GenerateInputFileCommand { get; }
-		public FormulasGeneratorViewModel(string selectInputFile)
+		private IEventLogService _eventLogService;
+		public FormulasGeneratorViewModel(string selectInputFile, IEventLogService eventLogService)
 		{
+			_eventLogService = eventLogService;
 			GenerateInputFileCommand = new Helpers.RelayCommand(onGenerateInputFile, canGenerateFile);
 			SelectInputFile = selectInputFile;
 		}
@@ -37,14 +40,14 @@ namespace IntegerCalculator.ViewModels
 				if (!File.Exists(SelectInputFile))
 					File.Create(SelectInputFile);
 
-				using (var writer = new StreamWriter(SelectInputFile))
+				using (var writer = new StreamWriter(SelectInputFile, append: false))
 				{
 					double stepProgress = 0;
 					for (int i = 0; i < NumberOfFormula; i++)
 					{
 						var formula = await formuLaGenerator.GenerateFormulaAsync();
 
-						if (formula != null)
+						if (!string.IsNullOrEmpty(formula))
 							await writer.WriteLineAsync(formula);
 
 						stepProgress++;
@@ -55,10 +58,12 @@ namespace IntegerCalculator.ViewModels
 			}
 			catch (Exception ex)
 			{
-				var aaa = ex;
+				_eventLogService.LogError(Guid.Parse("3aa90f29-fd8a-4e20-9291-eaf8a01cc8b9"), ex, null);
 			}
-
-			isMethodGenerateFileRun = false;
+			finally
+			{
+				isMethodGenerateFileRun = false;
+			}
 		}
 	}
 }

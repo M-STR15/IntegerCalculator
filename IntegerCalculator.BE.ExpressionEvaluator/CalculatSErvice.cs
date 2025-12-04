@@ -26,6 +26,11 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 			_eventLog = eventLog;
 		}
 
+		public async Task<ExpressionResult?> EvaluateExpressionAsync(string expression, bool withCalculationSteps = false)
+		{
+			return await Task.Run(() => EvaluateExpression(expression, withCalculationSteps));
+		}
+
 		public ExpressionResult? EvaluateExpression(string expression, bool withCalculationSteps = false)
 		{
 			try
