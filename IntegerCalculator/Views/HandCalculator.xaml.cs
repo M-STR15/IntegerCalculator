@@ -1,5 +1,4 @@
-﻿using IntegerCalculator.ViewModels;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace IntegerCalculator.Views
 {

@@ -20,11 +20,9 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 		};
 
 		private int _stepNumber = 0;
-		public List<string> CalculationSteps { get; set; } = new();
 		private IEventLogService _eventLog;
 		public CalculatService(IEventLogService eventLog)
 		{
-			CalculationSteps.Clear();
 			_eventLog = eventLog;
 		}
 
@@ -47,8 +45,8 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 				}
 
 				_stepNumber = 0;
-				CalculationSteps = new();
-				CalculationSteps.Add($"Vstupní výraz: '{expression}'");
+				var calculationSteps = new List<string>();
+				calculationSteps.Add($"Vstupní výraz: '{expression}'");
 				// Pro každý "level" precedence
 				foreach (var ops in _operatorsPrecedence)
 				{
@@ -70,7 +68,7 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 											   + expression.Substring(operation.EndOriginalIndex);
 
 									_stepNumber++;
-									CalculationSteps.Add($"{_stepNumber} krok výpočtu: '{expression}'");
+									calculationSteps.Add($"{_stepNumber} krok výpočtu: '{expression}'");
 
 									hasOperator = true;
 									break; // restart od začátku, aby se zachovalo pořadí zleva doprava
@@ -82,12 +80,12 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 
 				checkDotAndRound(ref expression);
 
-				CalculationSteps.Add($"Výsledek: '{expression}'");
+				calculationSteps.Add($"Výsledek: '{expression}'");
 
 				return new ExpressionResult
 				{
 					Result = expression,
-					CalculationSteps = CalculationSteps
+					CalculationSteps = calculationSteps
 				};
 			}
 			catch (Exception ex)
