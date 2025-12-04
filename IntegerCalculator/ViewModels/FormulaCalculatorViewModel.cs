@@ -30,8 +30,8 @@ namespace IntegerCalculator.ViewModels
 		public ICommand SelectInputFileCommand { get; private set; }
 		public ICommand SelectOutputFileCommand { get; private set; }
 		public ICommand StartCommand { get; private set; }
-		private CalculatService _calculatService;
-		public FormulaCalculatorViewModel(IEventLogService eventLogService, CalculatService calculatService)
+		private ICalculatService _calculatService;
+		public FormulaCalculatorViewModel(IEventLogService eventLogService, ICalculatService calculatService)
 		{
 			_eventLogService = eventLogService;
 			_calculatService = calculatService;

@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace IntegerCalculator.BE.ExpressionEvaluator
 {
-	public class CalculatService
+	public class CalculatService : ICalculatService
 	{
 		// Operátory rozdělené podle precedence
 		private readonly List<List<char>> _operatorsPrecedence = new()

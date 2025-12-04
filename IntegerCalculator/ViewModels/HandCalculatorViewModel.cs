@@ -14,10 +14,10 @@ namespace IntegerCalculator.ViewModels
 
 		public ICommand InsertCharacterCommand { get; private set; }
 		public ICommand EqualsCommand { get; private set; }
-		private CalculatService _calculatService;
+		private ICalculatService _calculatService;
 		public ObservableCollection<string> CalculationSteps { get; private set; } = new();
 
-		public HandCalculatorViewModel(CalculatService calculatService)
+		public HandCalculatorViewModel(ICalculatService calculatService)
 		{
 			_calculatService = calculatService;
 

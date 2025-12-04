@@ -1,6 +1,6 @@
 ﻿namespace IntegerCalculator.BE.ExpressionEvaluator
 {
-	public class FormulaGenerator
+	public class FormulaGenerator : IFormulaGenerator
 	{
 		private IList<char> _operators;
 
