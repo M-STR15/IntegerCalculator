@@ -143,6 +143,7 @@ namespace IntegerCalculator.ViewModels
 				MessageBox.Show("Vstupní soubor neexistuje.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 
+
 			ProgressExpression = 100;
 			IsMethodStartRun = false;
 		}
