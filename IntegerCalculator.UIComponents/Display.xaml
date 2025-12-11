@@ -11,26 +11,27 @@
             BorderBrush="#0A3A0A"
             BorderThickness="3"
             CornerRadius="5" />
-
-        <TextBox
-            x:Name="DisplayText"
-            Margin="10"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Right"
-            FontFamily="/YourAssemblyName;component/Fonts/#DS-Digital"
-            FontSize="60"
-            Foreground="#77FF66"
-            Background="Transparent"
-            PreviewKeyDown="DisplayText_PreviewKeyDown"
-            PreviewTextInput="DisplayText_PreviewTextInput"
-            Text="{Binding Value, RelativeSource={RelativeSource AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}">
-            <TextBox.Effect>
-                <DropShadowEffect
-                    BlurRadius="10"
-                    ShadowDepth="0"
-                    Color="#00FF00" />
-            </TextBox.Effect>
-        </TextBox>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+            <TextBox
+                x:Name="DisplayText"
+                Margin="10"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Right"
+                Background="Transparent"
+                FontFamily="/YourAssemblyName;component/Fonts/#DS-Digital"
+                FontSize="60"
+                Foreground="#77FF66"
+                PreviewKeyDown="DisplayText_PreviewKeyDown"
+                PreviewTextInput="DisplayText_PreviewTextInput"
+                Text="{Binding Value, RelativeSource={RelativeSource AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox.Effect>
+                    <DropShadowEffect
+                        BlurRadius="10"
+                        ShadowDepth="0"
+                        Color="#00FF00" />
+                </TextBox.Effect>
+            </TextBox>
+        </ScrollViewer>
     </Grid>
 </UserControl>
