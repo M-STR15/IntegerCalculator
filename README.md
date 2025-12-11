@@ -1,4 +1,4 @@
-﻿# IntegratedCalCulator (ve vývoji)
+﻿# IntegratedCalCulator
 
 💡 *Demonstrační aplikace pro výpočet jednoduchých integer hodnot.Projekt slouží jako ukázka architektury, práce s  WPF a architekturou MVVM.*
 
@@ -52,9 +52,9 @@ Projekt byl psán, aby při při generování výsledků vzorzů, aplikace zůst
 |------------------------|------:|
 | Přípravná práce        | 0,5 h |
 | Vývoj (BE + FE)        | 10 h |
-| Dokumentace            | 1 h |
-| Testování              | 2 h |
-| **Celkem:**            | **13,5 h** |
+| Dokumentace            | 0,5 h |
+| Vývoj testů            | 2 h |
+| **Celkem:**            | **13 h** |
 
 ---
 
@@ -82,12 +82,14 @@ Dodatečné info:
 
 
 ***
-### 0.0.2   (2025-12-11)
+### 1.0.0   (2025-12-11)
 - 🛠 Kontrola zda existuje výstupní soubor
 - 🛠 Ošetření dělení nulou
 - 🛠 Úprava UI, aby při dlouhých výrazech nedocházelo, že nebude vidět celý výraz
 - 🛠 🔒 Aplikace již při dlouhých výrazech nebude zasekávat, byla změněna funkce ze synchroní na asynchroní
-- 🛠 úprava UI aby nedocházelo po kliknutí na enter vložení poslední hodnoty po stisknutí tlačítka na displaji 
+- 🛠 Úprava UI aby nedocházelo po kliknutí na enter vložení poslední hodnoty po stisknutí tlačítka na displaji 
+- 🛠 Modifikace UI, přidání tlačítka C->Clear smazání hodnot na displaji
+
 ### 0.0.1   (2025-12-04)
 - 🚀 vytvořené základní funkcionality aplikace dle požadavku projektu
     - v dané verzi by bylo ještě dobré dodělat pár drobností:
