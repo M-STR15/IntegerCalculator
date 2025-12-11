@@ -92,6 +92,7 @@
         <uc:Keyboard
             Grid.Row="4"
             ClickCharacterCommand="{Binding InsertCharacterCommand}"
-            ClickEqualsCommand="{Binding EqualsCommand}" />
+            ClickEqualsCommand="{Binding EqualsCommand}"
+            ClickOnCCommand="{Binding ClearCommand}" />
     </Grid>
 </UserControl>

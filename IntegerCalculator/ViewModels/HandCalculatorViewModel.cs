@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace IntegerCalculator.ViewModels
 {
-	public partial class HandCalculatorViewModel:ObservableObject
+	public partial class HandCalculatorViewModel : ObservableObject
 	{
 		private static readonly char[] AllowedChars = "0123456789+-*/".ToCharArray();
 
@@ -14,6 +14,7 @@ namespace IntegerCalculator.ViewModels
 
 		public ICommand InsertCharacterCommand { get; private set; }
 		public ICommand EqualsCommand { get; private set; }
+		public ICommand ClearCommand { get; private set; }
 		private ICalculatService _calculatService;
 		public ObservableCollection<string> CalculationSteps { get; private set; } = new();
 
@@ -23,6 +24,12 @@ namespace IntegerCalculator.ViewModels
 
 			InsertCharacterCommand = new Helpers.RelayCommand(onInsertCharacter_Execute);
 			EqualsCommand = new Helpers.RelayCommand(onEqualsCommand_Execute);
+			ClearCommand = new Helpers.RelayCommand(onClearCommand_Execute);
+		}
+
+		private void onClearCommand_Execute(object obj)
+		{
+			ValueDisplay = string.Empty;
 		}
 
 		private void onInsertCharacter_Execute(object parameter)

@@ -72,11 +72,10 @@
             Grid.Row="0"
             Grid.Column="0"
             Grid.ColumnSpan="3"
-            Click="OnCharacterButtonClick"
+            Click="OnCButtonClick"
             Content="C"
             PreviewKeyDown="Button_PreviewKeyDown"
-            Style="{StaticResource CalcButtonStyle}"
-            Visibility="Collapsed" />
+            Style="{StaticResource CalcButtonStyle}" />
         <Button
             Grid.Row="0"
             Grid.Column="3"

@@ -23,6 +23,13 @@ namespace IntegerCalculator.UIComponents
 									  typeof(Keyboard),
 									  new PropertyMetadata(null));
 
+		public static readonly DependencyProperty ClickOnCCommandProperty =
+						  DependencyProperty.Register(
+							  nameof(ClickOnCCommand),
+							  typeof(object),
+							  typeof(Keyboard),
+							  new PropertyMetadata(null));
+
 		public static readonly DependencyProperty ClickCharacterCommandParameterProperty =
 								  DependencyProperty.Register(
 									  nameof(ClickCharacterCommandParameter),
@@ -41,6 +48,12 @@ namespace IntegerCalculator.UIComponents
 		{
 			get => (ICommand)GetValue(ClickEqualsCommandProperty);
 			set => SetValue(ClickEqualsCommandProperty, value);
+		}
+
+		public ICommand ClickOnCCommand
+		{
+			get => (ICommand)GetValue(ClickOnCCommandProperty);
+			set => SetValue(ClickOnCCommandProperty, value);
 		}
 
 		public object ClickEqualsCommandParameter
@@ -77,9 +90,7 @@ namespace IntegerCalculator.UIComponents
 			var character = button?.Content?.ToString();
 
 			if (ClickCharacterCommand?.CanExecute(character) == true)
-			{
 				ClickCharacterCommand.Execute(character);
-			}
 		}
 
 		private void OnEqualsButtonClick(object sender, RoutedEventArgs e)
@@ -88,9 +99,16 @@ namespace IntegerCalculator.UIComponents
 			var character = button?.Content?.ToString();
 
 			if (ClickEqualsCommand?.CanExecute(character) == true)
-			{
 				ClickEqualsCommand.Execute(character);
-			}
+		}
+
+		private void OnCButtonClick(object sender, RoutedEventArgs e)
+		{
+			var button = sender as Button;
+			var character = button?.Content?.ToString();
+
+			if (ClickOnCCommand?.CanExecute(character) == true)
+				ClickOnCCommand.Execute(character);
 		}
 	}
 }
