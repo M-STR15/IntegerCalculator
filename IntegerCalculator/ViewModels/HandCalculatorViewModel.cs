@@ -31,15 +31,13 @@ namespace IntegerCalculator.ViewModels
 			{
 				var isAllowed = AllowedChars.Contains(character.First());
 				if (isAllowed)
-				{
 					ValueDisplay += character;
-				}
 			}
 		}
 
-		private void onEqualsCommand_Execute(object parameter)
+		private async void onEqualsCommand_Execute(object parameter)
 		{
-			var expressionResult = _calculatService.EvaluateExpression(ValueDisplay, true);
+			var expressionResult = await _calculatService.EvaluateExpressionAsync(ValueDisplay, true);
 			CalculationSteps.Clear();
 			if (expressionResult != null)
 			{
