@@ -65,6 +65,11 @@ namespace IntegerCalculator.UIComponents
 			InitializeComponent();
 		}
 
+		private void Button_PreviewKeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.Key == Key.Enter)
+				e.Handled = true;
+		}
 		// Metoda, kterou zavoláte při kliknutí na tlačítko
 		private void OnCharacterButtonClick(object sender, RoutedEventArgs e)
 		{

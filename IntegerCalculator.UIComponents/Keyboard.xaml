@@ -74,6 +74,7 @@
             Grid.ColumnSpan="3"
             Click="OnCharacterButtonClick"
             Content="C"
+            PreviewKeyDown="Button_PreviewKeyDown"
             Style="{StaticResource CalcButtonStyle}"
             Visibility="Collapsed" />
         <Button
@@ -81,6 +82,7 @@
             Grid.Column="3"
             Click="OnCharacterButtonClick"
             Content="/"
+            PreviewKeyDown="Button_PreviewKeyDown"
             Style="{StaticResource CalcButtonStyle}" />
 
         <!--  2. Řádek  -->
@@ -89,24 +91,28 @@
             Grid.Column="0"
             Click="OnCharacterButtonClick"
             Content="7"
+            PreviewKeyDown="Button_PreviewKeyDown"
             Style="{StaticResource CalcButtonStyle}" />
         <Button
             Grid.Row="1"
             Grid.Column="1"
             Click="OnCharacterButtonClick"
             Content="8"
+            PreviewKeyDown="Button_PreviewKeyDown"
             Style="{StaticResource CalcButtonStyle}" />
         <Button
             Grid.Row="1"
             Grid.Column="2"
             Click="OnCharacterButtonClick"
             Content="9"
+            PreviewKeyDown="Button_PreviewKeyDown"
             Style="{StaticResource CalcButtonStyle}" />
         <Button
             Grid.Row="1"
             Grid.Column="3"
             Click="OnCharacterButtonClick"
             Content="*"
+            PreviewKeyDown="Button_PreviewKeyDown"
             Style="{StaticResource CalcButtonStyle}" />
 
         <!--  3. Řádek  -->
@@ -115,24 +121,28 @@
             Grid.Column="0"
             Click="OnCharacterButtonClick"
             Content="4"
+            PreviewKeyDown="Button_PreviewKeyDown"
             Style="{StaticResource CalcButtonStyle}" />
         <Button
             Grid.Row="2"
             Grid.Column="1"
             Click="OnCharacterButtonClick"
             Content="5"
+            PreviewKeyDown="Button_PreviewKeyDown"
             Style="{StaticResource CalcButtonStyle}" />
         <Button
             Grid.Row="2"
             Grid.Column="2"
             Click="OnCharacterButtonClick"
             Content="6"
+            PreviewKeyDown="Button_PreviewKeyDown"
             Style="{StaticResource CalcButtonStyle}" />
         <Button
             Grid.Row="2"
             Grid.Column="3"
             Click="OnCharacterButtonClick"
             Content="-"
+            PreviewKeyDown="Button_PreviewKeyDown"
             Style="{StaticResource CalcButtonStyle}" />
 
         <!--  4. Řádek  -->
@@ -141,24 +151,28 @@
             Grid.Column="0"
             Click="OnCharacterButtonClick"
             Content="1"
+            PreviewKeyDown="Button_PreviewKeyDown"
             Style="{StaticResource CalcButtonStyle}" />
         <Button
             Grid.Row="3"
             Grid.Column="1"
             Click="OnCharacterButtonClick"
             Content="2"
+            PreviewKeyDown="Button_PreviewKeyDown"
             Style="{StaticResource CalcButtonStyle}" />
         <Button
             Grid.Row="3"
             Grid.Column="2"
             Click="OnCharacterButtonClick"
             Content="3"
+            PreviewKeyDown="Button_PreviewKeyDown"
             Style="{StaticResource CalcButtonStyle}" />
         <Button
             Grid.Row="3"
             Grid.Column="3"
             Click="OnCharacterButtonClick"
             Content="+"
+            PreviewKeyDown="Button_PreviewKeyDown"
             Style="{StaticResource CalcButtonStyle}" />
 
         <!--  5. Řádek  -->
@@ -168,12 +182,14 @@
             Grid.ColumnSpan="3"
             Click="OnCharacterButtonClick"
             Content="0"
+            PreviewKeyDown="Button_PreviewKeyDown"
             Style="{StaticResource CalcButtonStyle}" />
         <Button
             Grid.Row="4"
             Grid.Column="3"
             Click="OnEqualsButtonClick"
             Content="="
+            PreviewKeyDown="Button_PreviewKeyDown"
             Style="{StaticResource CalcButtonStyle}" />
     </Grid>
 
