@@ -114,8 +114,9 @@ namespace IntegerCalculator.ViewModels
 			ProgressExpression = 0;
 
 			var existInputFile = File.Exists(SelectInputFile);
+			var existOutputFile = File.Exists(SelectOutputFile);
 			var listWithResults = new List<string>();
-			if (existInputFile)
+			if (existInputFile && existOutputFile)
 			{
 				using (var reader = new StreamReader(SelectInputFile))
 				using (var writer = new StreamWriter(SelectOutputFile))
@@ -133,8 +134,8 @@ namespace IntegerCalculator.ViewModels
 							await writer.WriteLineAsync(expressionResult.Result);
 
 						stepProgress++;
-						var percent= (stepProgress * 100) / countProgress;
-						ProgressExpression =Math.Round(percent,4);
+						var percent = (stepProgress * 100) / countProgress;
+						ProgressExpression = Math.Round(percent, 4);
 					}
 				}
 			}
