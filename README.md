@@ -87,6 +87,7 @@ Dodatečné info:
 - 🛠 Ošetření dělení nulou
 - 🛠 Úprava UI, aby při dlouhých výrazech nedocházelo, že nebude vidět celý výraz
 - 🛠 🔒 Aplikace již při dlouhých výrazech nebude zasekávat, byla změněna funkce ze synchroní na asynchroní
+- 🛠 úprava UI aby nedocházelo po kliknutí na enter vložení poslední hodnoty po stisknutí tlačítka na displaji 
 ### 0.0.1   (2025-12-04)
 - 🚀 vytvořené základní funkcionality aplikace dle požadavku projektu
     - v dané verzi by bylo ještě dobré dodělat pár drobností:
