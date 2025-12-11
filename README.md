@@ -82,6 +82,11 @@ Dodatečné info:
 
 
 ***
+### 0.0.2   (2025-12-11)
+- 🛠 Kontrola zda existuje výstupní soubor
+- 🛠 Ošetření dělení nulou
+- 🛠 Úprava UI, aby při dlouhých výrazech nedocházelo, že nebude vidět celý výraz
+- 🛠 🔒 Aplikace již při dlouhých výrazech nebude zasekávat, byla změněna funkce ze synchroní na asynchroní
 ### 0.0.1   (2025-12-04)
 - 🚀 vytvořené základní funkcionality aplikace dle požadavku projektu
     - v dané verzi by bylo ještě dobré dodělat pár drobností:
