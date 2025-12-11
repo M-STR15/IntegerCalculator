@@ -45,7 +45,7 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 				{
 					return new ExpressionResult
 					{
-						Result = $"Error - Invalid character: '{allowedCharacter.InvalidChar}'"
+						Result = $"Error - Chybný znak: '{allowedCharacter.InvalidChar}'"
 					};
 				}
 
@@ -100,7 +100,10 @@ namespace IntegerCalculator.BE.ExpressionEvaluator
 			catch (Exception ex)
 			{
 				_eventLog.LogError(Guid.NewGuid(), ex, $"Chyba při výpočtu výrazu '{expression}': {ex.Message}");
-				return default;
+				return new ExpressionResult
+				{
+					Result = ex.Message
+				};
 			}
 		}
 

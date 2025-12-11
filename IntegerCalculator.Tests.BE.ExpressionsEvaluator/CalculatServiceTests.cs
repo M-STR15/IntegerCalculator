@@ -98,8 +98,9 @@ namespace IntegerCalculator.Tests.BE.ExpressionsEvaluatorUnitTest
 		}
 
 		[Theory]
-		[InlineData("a + 1", "Error - Invalid character: 'a'")]
-		[InlineData("2.1*2", "Error - Invalid character: '.'")]
+		[InlineData("a + 1", "Error - Chybný znak: 'a'")]
+		[InlineData("2.1*2", "Error - Chybný znak: '.'")]
+		[InlineData("1/0", "Error: chyba dělení nulou.")]
 		public void EvaluateExpression_CheckAllowedCharacters(string formula, string resultTest)
 		{
 			var log = new FakeEventLogService();

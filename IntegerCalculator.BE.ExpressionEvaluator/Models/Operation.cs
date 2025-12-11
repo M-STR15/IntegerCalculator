@@ -23,9 +23,8 @@
 			'+' => Left + Right,
 			'-' => Left - Right,
 			'*' => Left * Right,
-			'/' => Left / Right,
+			'/' => Right != 0 ? (Left / Right): throw new InvalidOperationException($"Error: chyba dělení nulou."),
 			_ => throw new InvalidOperationException($"Neznámý operátor: {Operator}")
 		};
-
 	}
 }
